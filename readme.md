@@ -1,8 +1,8 @@
-Marketimho.ru
+п»їMarketimho.ru
 =============
 
-Исходники сайта http://marketimho.ru
+РСЃС…РѕРґРЅРёРєРё СЃР°Р№С‚Р° http://marketimho.ru
 
-Для установки:
-1) Залейте дамп базы из database.sql
-2) Откоректируйте config/common.php
+Р”Р»СЏ СѓСЃС‚Р°РЅРѕРІРєРё:
+1) Р—Р°Р»РµР№С‚Рµ РґР°РјРї Р±Р°Р·С‹ РёР· database.sql
+2) РћС‚РєРѕСЂРµРєС‚РёСЂСѓР№С‚Рµ config/common.php
