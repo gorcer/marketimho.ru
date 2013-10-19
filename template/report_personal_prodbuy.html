@@ -1,0 +1,82 @@
+<?
+  if (!$curUser) {
+?>
+ <div class='error'>Вы не можете просматривать эту страницу пока не зашли на сайт.</div>
+<?
+return;
+}
+
+if (!isset($_REQUEST['product_id'])) return;
+if (!$curUser) return;
+$product_id =intval($_REQUEST['product_id']);
+
+$Product = DbManager::getProductByID($product_id);
+
+$BuyList = DbManager::getBuyList($product_id, $curUser->id);
+
+?>
+
+<div class='prodinf_head'><?=ucfirst($Product->name) ?></div>
+<br/>
+<?
+ include ('template/nav_product.html');
+?>
+<br/>
+<div class='prodinf_capt' style='float:top;'>Персональный отчёт по расходам</div>
+<?
+
+if (sizeof($BuyList)==0)
+{
+?>
+  <div class='txt'>
+  Вы не совершали покупок этого товара, а следовательно не можете видеть отчёт по расходам.
+  </div>
+<?
+return;
+}
+
+?>
+
+
+
+ <script language="javascript" type="text/javascript" src="js/jquery.flot.js"></script>
+
+ <div id="placeholder" style="width:100%;height:300px;"></div>
+
+
+
+ <script id="source" language="javascript" type="text/javascript">
+
+$(function () {
+
+
+    var d1 = [];
+    <?
+    foreach($BuyList as $buy)
+    {
+
+//    $buy->dtm = date("F j, Y, g:i a",$buy->dtm);
+$buy->dtm = strtotime($buy->dtm) * 1000;
+    ?>
+        d1.push(["<?=$buy->dtm ?>", <?=$buy->price ?>]);
+
+    <?
+      }
+    ?>
+
+    $.plot($("#placeholder"),  [
+    { data: d1,
+    lines: { show: true },
+    points: { show: true }
+
+     }
+    ],
+     {
+    xaxis: {
+            mode: "time",
+            timeformat: "%d.%m.%y"
+            }
+     }
+    );
+});
+</script>

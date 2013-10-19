@@ -1,0 +1,62 @@
+<?
+if (!$curUser)
+{
+echo '<div class="error">—траницу могут просматривать только зарегистрированные пользователи.</div>';	return;}
+
+include('lib/ReportMgr.inc');
+//$p = ReportMgr::CalcUserReps('2009-09-01',30);
+//$p = ReportMgr::CalcUserReps('2009-10-01',30);
+//$p = ReportMgr::CalcUserReps('2009-11-01',30);
+//echo $p->pereplata.'----'.$p->prim_pereplata;
+
+$MouthList = ReportMgr::getMouthByUser($curUser->id);
+?>
+
+
+<h1>—водные отчЄты по персональным расходам по мес€цам</h1>
+
+<table class='txt' width='90%' cellpadding='3'>
+<tr>
+ <th>ћес€ц</th>
+ <th>–асходы</th>
+ <th>ѕереплаты</th>
+ <th>Ёкономи€</th>
+</tr>
+<?
+foreach($MouthList as $mouth)
+{
+$mouth_d = $mouth->dtm;
+$mouth_c = $mouth->dtm_c;
+$trati = ReportMgr::getSumBuyMouth($mouth_d, $curUser->id);
+$pereplati = ReportMgr::getPereplatiByMouth($mouth_d, $curUser->id);
+$max_pereplati = ReportMgr::getMaxPereplatiByMouth($mouth_d, $curUser->id);
+$econom = ReportMgr::getEconomByMouth($mouth_d, $curUser->id);
+?>
+ <tr>
+  <td align='center'><a href='mouth_report/<?=$mouth->dtm_l ?>'><?=$mouth_c ?></a></td>
+  <td align='center'><?=$trati ?></td>
+  <td align='center'>от <?=$pereplati ?> до <?=($pereplati+$max_pereplati) ?></td>
+  <td align='center'><?=$econom ?></td>
+ </tr>
+<?
+
+}
+if (sizeof($MouthList)==0)
+{
+?>
+<tr>
+ <td colspan='4' align='center' style='padding:10px;'>
+  у вас нет доступных отчЄтов
+ </td>
+</tr>
+<?
+}
+?>
+</table>
+
+
+<div class='hint'>
+ќтчЄты расчитываютс€ только в случае набора пользовтаелем не менее 150 строк товаров.<br/>
+Ќовый отчЄт формируетс€ регул€рно в первых числах мес€ца.
+
+</div>

@@ -1,0 +1,73 @@
+<div style='padding-top:16px;width:180px;'>
+<?
+
+if ($border_align=='right')
+$border_specify='border-right:1px solid #E5B1A9;';
+else
+$border_specify='border-left:1px solid #E5B1A9;';
+
+if (!$islogin)
+{
+?>
+
+
+<div style='padding-bottom:15px;<?=$border_specify ?>'>
+<div style='padding-left:25px;'>
+  <table cellpadding=2 cellspacing=0 border=0 width='199' height='82' >
+                <form  id='login_form' name='login_form' method='post' action="login_check.php">
+                <input type='hidden' name='proc' value='login'/>
+                 <tr>
+                 <td>
+                 </td>
+                  <td class='auth2'>
+                  <a href='service/register' >(регистрация)</a>
+                  </td>
+                 </tr>
+                 <tr>
+                  <td class='auth1' align='left' width='55' height='15'>логин:</td>
+                  <td width='81px'><input type='text' name='login' class='login_box' tabindex="1"/></td>
+                 </tr>
+                 <tr>
+                  <td class='auth1' align='left' width='55' height='15'>пароль:</td>
+                  <td><input type='password' name='pwd' class='login_box' tabindex="2"/></td>
+                  <td align='left' valign='bottom' style='padding-left:5px;'><input tabindex="4" type="submit" value="вход" class='login_submit'></td>
+                 </tr>
+
+                 <tr>
+                  <td></td>
+                  <td class='auth2' valign='TOP'><input tabindex="3" type='checkbox' name='remind' value=1 align='left'/> запомнить</td>
+                 </tr>
+
+                </form>
+                </table>
+</div>
+</div>
+
+
+<?
+}
+else
+{
+?>
+<div style='padding-bottom:15px;border-bottom:1px solid #E5B1A9;<?=$border_specify ?>'>
+<div style='padding-left:25px;'>
+ <table cellpadding=2 cellspacing=0 border=0  height='82' >
+                 <tr>
+                 <td class='user_box'>
+                  Добро пожаловать, <br/><a href='user/<?=$curUser->login?>'><?= $curUser->name ?></a>
+                 </td>
+                 </tr>
+                 <tr>
+                  <td class='menu_itm'>
+                  <?
+                  include ('template/user_menu.html');
+                  ?>
+                  </td>
+                 </tr>
+</table>
+</div>
+<?
+}
+?>
+</div>
+</div>

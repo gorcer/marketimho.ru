@@ -1,0 +1,73 @@
+ <table cellpadding=2 cellspacing=0 border=0 class='menu_itm'>
+ <tr>
+ <td style='line-height:5px;'>
+ &nbsp;
+ </td>
+</tr>
+     <tr>
+      <td><img src='pict/menu_decor.gif'/></td><td>
+      <a href='user/<?=$curUser->login ?>'>профиль</a>  <br/>
+      </td>
+     </tr>
+
+     <?
+
+     $f_cnt = DbManager::getNewMessageCnt($curUser->id);
+
+
+$f_cnt_txt=' <span style="color:#CD3905;font-size:10px;"><sup>new</sup></span>';
+if ($f_cnt>0)
+$f_cnt_txt=' <span style="color:#CD3905;font-size:10px;">(+'.$f_cnt.')</span>';
+
+
+
+     ?>
+
+          <tr>
+      <td><img src='pict/menu_decor.gif'/></td><td>
+      <a href='messages'>сообщения</a><?=$f_cnt_txt ?>  <br/>
+      </td>
+     </tr>
+
+     <tr>
+      <td><img src='pict/menu_decor.gif'/></td><td>
+      <a href='all_checks'>чеки</a>  <br/>
+      </td>
+     </tr>
+
+<?
+$f_cnt = DbManager::getNewFriendCnt($curUser->id);
+
+
+$f_cnt_txt='';
+if ($f_cnt>0)
+$f_cnt_txt=' <span style="color:#CD3905;font-size:10px;">(+'.$f_cnt.')</span>';
+
+
+
+?>
+
+     <tr>
+      <td><img src='pict/menu_decor.gif'/></td><td>
+      <a href='myfriends'>друзья</a><?=$f_cnt_txt ?>  <br/>
+      </td>
+     </tr>
+     <tr>
+      <td><img src='pict/menu_decor.gif'/></td><td>
+      <a href='buy_plan'>план покупок</a>  <br/>
+      </td>
+     </tr>
+
+     <tr>
+      <td>
+      </td>
+     </tr>
+<tr>
+<td>
+<img src='pict/exit_butt.gif'/>
+</td>
+<td>
+<a href='logout.php'>выход</a>
+</td>
+</tr>
+</table>

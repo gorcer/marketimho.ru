@@ -1,0 +1,68 @@
+<div style='padding-top:0px;'>
+<?
+include_once("users/usermanager.php");
+//tmp
+$islogin = false;
+
+$um = UserManager::get_Instance();
+$currentUser = $um->GetCurrentUser();
+if (($currentUser!=null)&&($currentUser->id>0)){
+        $islogin = true;
+}
+
+
+if (!$islogin)
+{
+?>
+
+
+<div style='padding-bottom:15px;'>
+<?
+if (isset($_SESSION["error_login_check"])){
+        $msg = $_SESSION["error_login_check"];
+        unset($_SESSION["error_login_check"]);
+        ?>
+        <div class='error'><?= $msg?></div>
+        <br/>
+        <?
+}
+?>
+<div style='padding-left:25px;'>
+<h1>Авторизация</h1>
+  <table cellpadding=2 cellspacing=0 border=0 width='199' height='82' >
+                <form  id='login_form' name='login_form' method='post' action="login_check.php">
+                <input type='hidden' name='proc' value='login'/>
+                 <tr>
+                  <td class='auth1' align='left' width='55' height='15'>логин:</td>
+                  <td width='81px'><input type='text' name='login' class='login_box'/></td>
+                 </tr>
+                 <tr>
+                  <td class='auth1' align='left' width='55' height='15'>пароль:</td>
+                  <td><input type='password' name='pwd' class='login_box'/></td>
+                  <td width=40 align='left' valign='bottom' style='padding-left:15px;'><input type="submit" value="OK"></td>
+                 </tr>
+
+                 <tr>
+                  <td></td>
+                  <td class='auth2' valign='TOP'><input type='checkbox' name='remind' value=1 align='left'/> запомнить</td>
+                </tr>
+
+                <tr>
+                 <td colspan='3' class='txt' align='center'>
+                   <a href="service/forget">Напомнить пароль</a>
+                 </td>
+                </tr>
+                </form>
+                </table>
+</div>
+<div>
+
+</div>
+</div>
+
+
+<?
+}
+?>
+</div>
+</div>

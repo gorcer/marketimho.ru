@@ -1,0 +1,60 @@
+<?
+
+if (!isset($_REQUEST['id'])) return;
+$id=intval($_REQUEST['id']);
+
+   $Shop = $dbmanager->getShopByID($id);
+
+$street='';
+if ($Shop->StreetName!='')
+$street='ул.'.$Shop->StreetName;
+
+$house_n='';
+if ($Shop->house_n!='')
+$house_n=', д.'.$Shop->house_n;
+
+$CPList = DbManager::getShopCPlist($id);
+
+?>
+
+<div class='shop_capt'>
+<?=$Shop->name ?>
+<br/>
+<span class='shop_street'><?=$street ?><?=$house_n ?></span>
+</div>
+<br/>
+<?
+ include ('template/nav_shop.html');
+?>
+<br/>
+
+<table cellpadding=5 cellspacing=3 border=0 class='inprice_row' width='100%'>
+<tr>
+ <td><div class='prodinf_capt' style='float:top;'>÷енова€ категори€</div></td>
+ <td class='inprice_dtm'><u>Ќаценка</u></td>
+</tr>
+<?
+ $i=0;
+foreach($CPList as $item)
+{
+$i++;
+
+   $color='#606060';
+   $cp='?';
+   if ($item->cp!='')
+   $cp =round($item->cp*100,2).'%';
+?>
+<tr>
+ <td style='border-bottom:1px solid #e5e5e5;'>от <?=$item->min_price ?> до <?=$item->max_price ?> </td>
+ <td style='color:<?=$color ?>;border-bottom:1px solid #e5e5e5;'><?=$cp ?></td>
+</tr>
+<?
+}
+?>
+
+</table>
+<div class='hint'>
+Ќаценка €вл€етс€ приблизительной и расчитываетс€ на основании сравнени€ с минимальной ценой схожих позиций товаров.
+Ќеобходимо совпадение не менее трЄх товаров в ценовой категории чтобы она была расчитана.
+</div>
+<br/><br/>

@@ -1,0 +1,75 @@
+<?
+
+$city_id=UserManager::getUserCity();
+$pn = 'news_'.$city_id.'.html';
+if (!is_cached ($pn, 30))
+{
+ob_start();
+
+$NewsList = DbManager::getLastNews(16);
+
+?>
+
+<div style='padding-left:60px;padding-top:10px;'>
+<table class='lastnew_txt'  width='178' cellpaddin='2' cellspacing=0 style='border-right:1px solid #B8BFC7;'>
+<tr>
+ <td colspan='2' style='padding-bottom:10px;'>
+ <span class='menu_capt'><u>Последние поступления</u></span>
+ </td>
+</tr>
+<?
+
+$i=0;
+foreach ($NewsList as $item)
+{
+$i++;
+
+ switch ($item->obj_name)
+ {
+  case 'chk_products':
+                      $ico = 'pict/plus_box.jpg';
+                      $link='product/'.$item->id;
+                      break;
+  case 'chk_shop':
+                      $ico = 'pict/plus_house.jpg';
+                      $link='shop/'.$item->id;
+                      break;
+ }
+
+?>
+  <tr>
+   <td  style='padding-top:6px;padding-right:2px;' valign='top'><img src='<?=$ico ?>' border=0/></td>
+   <td  style='padding-top:6px;'><a href='<?=$link ?>'><?=$item->name ?></a></td>
+  </tr>
+<?
+}
+
+if ($i==0)
+{
+?>
+ <tr>
+  <td class='txt'>
+  Пока ничего не поступало
+
+  </td>
+ </tr>
+<?
+}
+?>
+</table>
+</div>
+<br/>
+<br/>
+
+<?
+
+$out = ob_get_contents();
+
+ob_end_clean();
+
+ cache_file ($pn, $out);
+
+}
+
+include ('cache/'.$pn);
+?>

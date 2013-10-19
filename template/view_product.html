@@ -1,0 +1,56 @@
+<?
+
+if (!isset($_REQUEST['id'])) return;
+$id=intval($_REQUEST['id']);
+
+        $Product = DbManager::getProductInfo($id);
+
+?>
+
+<div class='prodinf_head'><?=ucfirst($Product->name) ?></div>
+<br/>
+<?
+ include ('template/nav_product.html');
+?>
+<br/>
+
+<div class='prodinf_capt' style='float:top;'>“очки продаж</div>
+
+<table cellpadding=0 cellspacing=3 border=0 class='inproduct_row' width='100%'>
+<?
+$i=0;
+$fprice=0;
+foreach ($Product->items as $item)
+{
+$i++;
+if ($i==1) $fprice=$item->price;
+
+ $comment_img='';
+   if ($item->comment_cnt>0)
+   $comment_img='<a href="shop/'.$item->ShopId.'/comment"><img src="pict/comment.jpg"/></a>';
+
+?>
+<tr>
+ <td width='20px' height='20px' style='background:#e0eaf0;' align='center'><?=$i ?></td>
+ <td class='inprod_shop' style='border-bottom:1px solid #f6f3e5;'><a href='shop/<?=$item->ShopId ?>/pricelist'><?=$item->ShopName ?></a> <?=$comment_img ?></td>
+ <td class='inprice_price'  style='border-bottom:1px solid #f6f3e5;' width='100'><?=$item->price ?><?
+ if (($i>1) && (is_numeric($item->price)) && ($item->price!=$fprice))
+ {
+ $pr = round($item->price/$fprice-1,2)*100;
+ echo '<sup  class="inprice_dif"> +'.$pr.'%</sup>';
+ }
+
+ ?>
+ </td>
+ <td class='inprod_usrdtm' width='25%'><nobr><span style='color:#6e6e6e;padding-right:4px;'><?=$item->dtm ?></span><a href='user/<?=$item->owner ?>' title='ѕоследним добавил  <?=$item->owner ?>'><?=$item->owner ?></a></nobr></td>
+</tr>
+
+<?
+}
+?>
+</table>
+
+<br/><br/>
+<div class='txt'>
+n/a - этот статус означает что вы не можете увидеть цену на данную строку товара. ÷ена на товар будет показана только если вы добавите в друзь€ человека, добавившего этот товар.
+</div>

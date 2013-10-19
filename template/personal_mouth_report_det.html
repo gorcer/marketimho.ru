@@ -1,0 +1,52 @@
+<?
+if (!$curUser)
+{
+echo '<div class="error">Страницу могут просматривать только зарегистрированные пользователи.</div>';
+	return;
+}
+
+include('lib/ReportMgr.inc');
+
+$dtm = strtotime($_REQUEST['dtm']);
+$dtm_c = date('m.Y', $dtm);
+$dtm_d = date('Y-m-d 00:00:00', $dtm);
+
+
+$UserReportDetail = ReportMgr::getUserReportDetail($dtm_d, $curUser->id);
+?>
+<h1>Детализация персонального отчёта за месяц (<?=$dtm_c ?>)</h1>
+
+<table width='100%' class='txt' cellpadding=15 cellspacing=0 style='border:1px solid #e0e0e0;'>
+<?
+$second_rashod=0;
+foreach($UserReportDetail as $det)
+{
+$class_n=3;
+if ($det->pos==1) $class_n=1;
+if ($det->pos==2) $class_n=2;
+if ($det->pos==0) $second_rashod+=$det->value; ?>
+ <tr>
+ <td style='padding-right:10px;border-bottom:1px solid #e0e0e0;'>
+    <span class='pers_capt_h<?=$class_n ?>'><b><?=$det->name ?></b></span><br/>
+    <span class='txt'><?=$det->descript ?></span>
+ </td>
+ <td style='<?=($det->pos!=0)?'border-bottom:1px solid #e0e0e0;':'border-left:1px solid #e0e0e0;'; ?>'>
+  <span class='pers_val<?=$class_n ?>'><nobr><?=$det->value ?> руб.</nobr></span>
+ </td>
+ </tr>
+ <?
+}
+if ($second_rashod>0)
+{
+?>
+<tr>
+ <td><b>ИТОГО:</b></td>
+ <td class='pers_val3' style='border-top:1px solid #e0e0e0;border-left:1px solid #e0e0e0;'><nobr><?=$second_rashod ?> руб.</nobr></td>
+</tr>
+<?
+}
+?>
+
+<tr>
+</tr>
+</table>

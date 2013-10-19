@@ -1,0 +1,96 @@
+<?
+  if (!$curUser) {
+?>
+ <div class='error'>Вы не можете просматривать эту страницу пока не зашли на сайт.</div>
+<?
+return;
+}
+
+$CheckList = $dbmanager->getCheckList_byUser($curUser->id);
+
+?>
+
+<script>
+
+  function DelCheck(id)
+  {
+    $.post(
+     'ctrl_action.php',
+     {
+             act:'del_check',
+             id:id
+     }
+     ,
+     function (data)
+       {
+        if (data=='ok')
+        {
+          $('.chk_field'+id).css('text-decoration','line-through');
+          $('#chk_ctrl_'+id).html("<a href='javascript:RestoreCheck("+id+");'>[восстановить]</a>");
+        }
+       }
+
+    );
+  }
+
+
+
+  function RestoreCheck(id)
+  {
+    $.post(
+     'ctrl_action.php',
+     {
+             act:'restore_check',
+             id:id
+     }
+     ,
+     function (data)
+       {
+
+        if (data=='ok')
+        {
+          $('.chk_field'+id).css('text-decoration','none');
+          $('#chk_ctrl_'+id).html("<a href='javascript:DelCheck("+id+");'>[удалить]</a>");
+        }
+       }
+
+    );
+  }
+
+</script>
+
+<h1>Ваши чеки</h1>
+<table cellpadding=2 cellspacing=0 border=0 class='txt' width='100%'>
+    <tr>
+     <th align='left' width='70px'>Дата</th>
+     <th align='left'>Магазин</th>
+     <th>Строк</th>
+     <th>Сумма (Руб.)</th>
+    </tr>
+
+<?
+$csum=0;
+
+foreach($CheckList as $check)
+{
+
+$csum+=$check->sum;
+
+  ?>
+    <tr id='chk_<?=$check->id ?>'>
+     <td class='chk_field<?=$check->id ?>'><a href='view_check/<?=$check->id ?>'><?=$check->create_dtm ?></a></td>
+     <td class='chk_field<?=$check->id ?>'><a href='shop/<?=$check->ShopId ?>/pricelist'><?=$check->ShopName ?></a></td>
+     <td class='chk_field<?=$check->id ?>' align='center'><?=$check->det_cnt ?></td>
+     <td class='chk_field<?=$check->id ?>' align='center'><?=$check->sum ?></td>
+     <td width='30%'> <nobr><a href='service/edit_check/<?=$check->id ?>'>[изменить]</a> <span id='chk_ctrl_<?=$check->id ?>'><a href='javascript:DelCheck(<?=$check->id ?>);'>[удалить]</a></span></nobr>  </td>
+    </tr>
+  <?
+}
+?>
+<tr>
+ <td></td>
+ <td></td>
+ <td></td>
+ <td style='border-top:1px solid #e0e0e0;'  align='center'><b><?=$csum ?> RUB</b></td>
+</tr>
+</table>

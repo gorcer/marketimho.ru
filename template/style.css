@@ -1,0 +1,621 @@
+IMG {
+        border:0px;
+        }
+
+A {
+   TEXT-DECORATION: none;
+        }
+A:hover {
+        TEXT-DECORATION: underline;
+        }
+
+
+.footer_txt {color:#454545;font-size:11px;FONT-FAMILY:  Verdana;FONT-WEIGHT:normal;}
+.footer_txt A:link {COLOR:#FD5B31;font-size:11px;FONT-FAMILY:  Verdana;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.footer_txt A:visited {COLOR:#FD5B31;font-size:11px;FONT-FAMILY:  Verdana;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.footer_txt A:hover {COLOR:#FD5B31;font-size:11px;FONT-FAMILY:  Verdana;  FONT-WEIGHT:normal;   TEXT-DECORATION: underline;}
+
+h1 {color:#37597C;font-size:18px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+
+
+
+.regtxt {color:#484848;font-size:12px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+.regtxt_lite {color:#777777;font-size:10px;FONT-FAMILY:  Arial;FONT-WEIGHT:bold;}
+
+INPUT.reg_box_red, INPUT.reg_box {
+    BORDER:1px solid #484848; COLOR: #444444;
+    FONT-STYLE: none; FONT-FAMILY:Tahoma;
+    text-align:left; font-size:12px;FONT-WEIGHT:none;
+    width:185px;height:20px;
+    background-color:#F3F9FE;
+    margin-top:-2;
+    padding-top:0px;
+}
+
+INPUT.reg_box_red {
+    background-color:#FEF8F3;
+}
+
+
+INPUT.reg_butt {
+    BORDER:1px solid #484848; COLOR: #000000;
+    FONT-STYLE: none; FONT-FAMILY:Tahoma;
+    text-align:left; font-size:11px;FONT-WEIGHT:normal;
+    width:80px;height:25px;
+    background-color:#FAE3CD;
+    margin-top:-2;
+    padding-top:0px;
+}
+
+
+
+.article_head {color:#37597C;font-size:18px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+.article_head A:link {COLOR:#F35622;font-size:18px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:underline;}
+.article_head A:visited {COLOR:#F35622;font-size:18px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:underline;}
+.article_head A:hover {COLOR:#F35622;font-size:18px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;   TEXT-DECORATION: underline;}
+
+.userpage_menu {color:#004A69;font-size:14px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal; line-height:20px;}
+.userpage_menu A:link {COLOR:#004A69;font-size:14px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:underline;}
+.userpage_menu A:visited {COLOR:#004A69;font-size:14px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:underline;}
+.userpage_menu A:hover {COLOR:#004A69;font-size:14px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;   TEXT-DECORATION: underline;}
+
+.userpage_param {color:#494949;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+.userpage_value {color:#2C5478;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+
+
+.txt {color:#505050;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+.txt A:link {COLOR:#37597C;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.txt A:visited {COLOR:#37597C;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.txt A:hover {COLOR:#37597C;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;   TEXT-DECORATION: underline;}
+
+.blue_txt {color:#37597C;font-size:12px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+.blue_txt A:link {COLOR:#37597C;font-size:12px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.blue_txt A:visited {COLOR:#37597C;font-size:12px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.blue_txt A:hover {COLOR:#FD5B31;font-size:12px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;   TEXT-DECORATION: underline;}
+
+.blue_txt2 {color:#37597C;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+.blue_txt2 A:link {COLOR:#37597C;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:underline;}
+.blue_txt2 A:visited {COLOR:#37597C;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:underline;}
+.blue_txt2 A:hover {COLOR:#FD5B31;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;   TEXT-DECORATION: underline;}
+
+
+.useredit_box  {
+    BORDER:1px solid #919191; COLOR: #534029;
+    FONT-STYLE: none; FONT-FAMILY:Tahoma;
+    text-align:left; font-size:12px;
+    width:185px; height:20px;
+        }
+
+div.error {
+
+         border:1px solid #F6C0C5;
+         background-color:#FFFCF8;
+         padding:10px;
+        width:250px;
+         margin:10px;
+         margin-left:30px;
+        }
+.error {color:#FD5B31;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:bold;}
+.error A:link {COLOR:#dD3B11;font-size:14px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.error A:visited {COLOR:#dD3B11;font-size:14px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.error A:hover {COLOR:#dD3B11;font-size:14px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;   TEXT-DECORATION: underline;}
+
+
+div.pageitem_sel, div.pageitem_l, div.pageitem_r, div.pageitem {
+        width:10px;
+        height:10px;
+        background:#FBF7EF;
+        border:1px solid #F4E2D1;
+        padding:5px;
+        margin:5px;
+        float:left;
+        text-align:center;
+        }
+
+.pageitem_l A, .pageitem_r A, .pageitem A, .pageitem A, .pageitem_sel {
+        color:#424242;
+        font-size:10px;
+        font-family:Tahoma;
+        }
+
+div.pageitem_l ,div.pageitem_r {
+        background:#EFF7FF;
+        border:1px solid #C7E8F6;
+        margin-left:10px;
+        }
+
+div.pageitem_l {
+        margin-right:10px;
+        }
+
+div.pageitem_sel {
+        border:1px solid #F4BE8B;
+        background:#FFFDE5;
+        color:#76491E;
+        }
+
+INPUT.shop_capt {
+    BORDER:1px solid #5c5c5c;
+    background-color:#ffffff;
+    font-size: 14px;
+    font-family: Tahoma;
+    color: #1F3E49;
+    height:20px;
+    width:80%;
+    }
+
+INPUT.comment_elem {
+    BORDER:1px solid #5c5c5c;
+    background-color:#ffffff;
+    font-size: 11px;
+    font-family: Tahoma;
+    color: #1F3E49;
+    height:16px;
+    width:90%;
+    }
+
+INPUT.goods_cnt ,INPUT.goods_price ,INPUT.goods_capt {
+    BORDER:1px solid #5c5c5c;
+    background-color:#ffffff;
+    font-size: 14px;
+    font-family: Tahoma;
+    color: #a57163;
+    height:20px;
+    width:90%;
+    }
+
+
+INPUT.goods_price {
+        color: #e64208;
+        }
+
+.menu_capt {color:#37597C;font-size:12px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:bold;}
+
+.menu_itm {color:#37597C;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+.menu_itm A:link {COLOR:#37597C;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.menu_itm A:visited {COLOR:#37597C;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.menu_itm A:hover {COLOR:#C84A2E;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;   TEXT-DECORATION: underline;}
+
+.capt1 {
+        font-family:Tahoma;
+        font-size:14px;
+         color: #5c5c5c;
+         font-weight:bold;
+        }
+
+.capt2 {
+        font-family:Tahoma;
+        font-size:12px;
+         color: #37597C;
+         font-weight:bold;
+        }
+
+
+
+.user_box {color:#676767;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+.user_box A:link {COLOR:#2573C3;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.user_box A:visited {COLOR:#2573C3;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.user_box A:hover {COLOR:#2573C3;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;   TEXT-DECORATION: underline;}
+
+
+.auth1 {color:#676767;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:bold;}
+.auth1 A:link {COLOR:#676767;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:bold;  TEXT-DECORATION:none;}
+.auth1 A:visited {COLOR:#676767;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:bold;  TEXT-DECORATION:none;}
+.auth1 A:hover {COLOR:#676767;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:bold;   TEXT-DECORATION: underline;}
+
+INPUT.login_box {
+BORDER:1px solid #E9AF9A; COLOR: #666666;
+    FONT-STYLE: none; FONT-FAMILY:Tahoma;
+    text-align:left; font-size:11px;FONT-WEIGHT:bold;
+    width:81px;height:17px;
+            margin-top:-2;
+
+        padding-top:0px;
+}
+
+.auth2 {color:#727272;font-size:10px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+.auth2 A:link {COLOR:#727272;font-size:10px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.auth2 A:visited {COLOR:#727272;font-size:10px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.auth2 A:hover {COLOR:#727272;font-size:10px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;   TEXT-DECORATION: underline;}
+
+div.chk_print_list {
+        padding:5px;
+        border:1px solid #e0e0e0;
+        width:100%;
+        margin:5px;
+        display:block;
+        overflow:hidden;
+        }
+.chk_print_list {
+        color:#444444;font-size:14px;FONT-FAMILY:  Courier New;FONT-WEIGHT:normal;
+
+        }
+
+.redtxt {
+        color:#FD5B31;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;
+        }
+
+.chk_head, .analiz_h {
+        background-color:#F6F6F6;
+        padding:2px;
+        border:0px;
+        }
+
+
+.analiz_h {
+        background-color:#84E680;
+
+        }
+
+.analiz_d {
+        border-left:1px solid #E4FAE3;
+
+        border-bottom:1px solid #e0e0e0;
+        background-color:#E4FAE3;
+        }
+
+.analiz_h_p {
+       color:#B34E1C;
+       font-weight:normal;
+
+        }
+
+.analiz_d_p {
+        color:#B34E1C;
+       border-bottom:1px solid #e0e0e0;
+       border-right:1px solid #e0e0e0;
+        border-left:1px solid #E4FAE3;
+        }
+
+input.shop_capt {
+        width:90%;
+        }
+
+.sel_shop {
+        background-color:#F0FCFF;
+        }
+
+.add_prod_capt
+{
+        color:#703C1D;
+}
+
+.add_shop_capt
+{
+ color:#1F3E49;
+}
+
+td.chk_det {
+        border-bottom:1px solid #e0e0e0;
+        }
+
+.fr_status {
+        background-color:#EDF0B4;
+        font-size:9px;
+        color:#4E502B;
+        border-bottom:1px solid #C8D069;
+        }
+
+.fr_declined {
+        color: #DE470B;
+        }
+
+.fr_accepted {
+              color:#5D8517;
+              font-weight:bold;
+        }
+
+.fr_name {
+
+        border-bottom:1px solid #f0f0f0;
+        }
+
+.fr_name {color:#444444;font-size:14px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:bold;}
+.fr_name A:link {COLOR:#444444;font-size:14px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:bold;  TEXT-DECORATION:none;}
+.fr_name A:visited {COLOR:#444444;font-size:14px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:bold;  TEXT-DECORATION:none;}
+.fr_name A:hover {COLOR:#444444;font-size:14px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:bold;   TEXT-DECORATION: underline;}
+
+
+.fr_descript {
+        font-size:9px;
+        color:#777777;
+        FONT-WEIGHT:normal;
+        }
+
+.fr_claim {
+        font-weight:bold;
+        }
+
+.shop_capt {
+                font-family:Tahoma;
+                font-size:30px;
+                color:#1d5d8f;
+        }
+
+.shop_street {
+        color: #44484c;
+        font-size: 12px;
+        font-family:Tahoma;
+        font-weight:bold;
+        }
+
+.inprice_row A,.inprice_row {
+   color:#363636;
+        font-size: 12px;
+        font-family:Tahoma;
+        }
+
+.inprice_price {
+
+        }
+
+.inprice_dif {
+              font-size:10px;
+              color:#6C80AA;
+}
+
+.inprice_dtm {
+        color: #c4c4c4;
+        font-size:9px;
+        }
+
+.inprice_dtm A:visited, .inprice_dtm A:link, {
+        color: #c4c4c4;
+        font-size:9px;
+        }
+
+
+.inproduct_row A, .inproduct_row {
+        font-size:11px;
+        font-family:Tahoma;
+        color:#505050;
+        }
+
+.prodinf_head, .prodinf_head A {
+           font-size:18px;
+        font-family:Tahoma;
+         color:#195f8b;
+        text-decoration:underline;
+        }
+
+.prodinf_capt {
+        color:#5b5b5b;
+        font-family:Tahoma;
+        font-size:12px;
+        text-decoration:underline;
+        font-weight:bold;
+        padding-bottom:10px;
+        }
+
+.inprod_usrdtm A, .inprod_usrdtm {
+        color:#414141;
+         font-size:10px;
+         font-familt:Tahoma;
+         background:#f6f3e5;
+         padding:5px;
+        }
+
+.inprod_shop A, .inprod_shop {
+        color:#195f8b;
+        font: 11px Tahoma;
+        font-weight:bold;
+        padding-left:3px;
+
+        }
+
+input.login_submit {
+        width:50px
+        height:20px;
+        border:1px solid #999999;
+        font-size:9px;
+        background:#f0f0f0;
+        }
+
+div.hint {
+        display:block;
+        background:#FAFAFA;
+        border:1px solid #EEEEEE;
+        padding:10px;
+        width:90%;
+        margin:5px;
+        overflow:hidden;
+
+        }
+
+.hint {color:#505050;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+
+div.prod_butt {
+        display:block;
+        float:left;
+        padding:10px;
+        margin:5px;
+        border:1px solid #eeeeee;
+        }
+
+.prod_butt A, .prod_butt {
+        background:#fafafa;
+        color:#666666;
+        font: 11px Tahoma;
+        }
+
+.addcheck_txt {
+   color:#5C636D;
+        font: 11px Tahoma;
+        font-weight:normal;
+        }
+
+INPUT.shop_capt_ext {
+    BORDER:1px solid #E8EDF4;
+    background-color:#ffffff;
+    font-size: 16px;
+    font-family: Tahoma;
+    color: #5C636D;
+    height:30px;
+    width:100%;
+    }
+
+TABLE.addcheck_txt {
+        border:1px solid  #E8EDF4;
+        background:#F3F6FA;
+        }
+
+.UserTopCapt {
+        color:#4C7CA1;
+        font-size:18px;
+        text-decoration:underline;
+        font-family: Tahoma;
+       }
+
+.utop_user A   {
+        color:#565656;
+        font-size:12px;
+        text-decoration:none;
+        font-weight:bold;
+        font-family: Tahoma;
+        }
+
+.utop_user A:href {
+        color:#4C7CA1;
+        text-decoration:underline;
+        }
+
+.utop_userDet, .utop_userDet A {
+        color:#969696;
+        font-size:9px;
+        text-decoration:none;
+        font-weight:normal;
+        font-family: Tahoma;
+        }
+
+.lastnew_capt {
+            color:#57687A;
+            font-size: 12px;
+            font-family: Tahoma;
+            font-weight:bold;
+}
+
+.lastnew_txt {color:#434343;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;}
+.lastnew_txt A:link {COLOR:#434343;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.lastnew_txt A:visited {COLOR:#434343;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;  TEXT-DECORATION:none;}
+.lastnew_txt A:hover {COLOR:#57687A;font-size:11px;FONT-FAMILY:  Tahoma;  FONT-WEIGHT:normal;   TEXT-DECORATION: underline;}
+
+.comment_alt  {
+            color:#195F8B;
+            font-size: 11px;
+            font-family: Tahoma;
+            font-weight:normal;
+}
+
+
+
+SPAN.tagMatches SPAN {
+    padding: 2px;
+    line-height:20px;
+    margin: 1px;
+
+        background-color:#EDF0B4;
+        color:#4E502B;
+        border:1px solid #C8D069;
+
+    cursor: pointer;
+    display:inline-block;
+}
+
+
+.pers_capt_h1 {        color:#82be19;
+        font-size:12px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;        }
+
+.pers_capt_h2 {
+        color:#852910;
+        font-size:12px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;
+        }
+
+.pers_capt_h3 {
+        color:#555555;
+        font-size:12px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;
+        }
+
+.pers_val1 {
+        color:#82be19;
+        font-size:18px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;
+        }
+
+.pers_val2 {
+        color:#ff3802;
+        font-size:18px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;
+        }
+
+.pers_val3 {
+        color:#494949;
+        font-size:18px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;
+        }
+
+.regsel {
+        color:#41638E;
+        font-size:11px;FONT-FAMILY:  Tahoma;
+        border:1px solid #41638E;
+        width:135px;
+        }
+
+
+.offpartner {color:#3D3D3D;font-size:14px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal; TEXT-DECORATION: underline;}
+
+.planbuy_bg {
+background-image:url("../pict/planbuy_bg.gif");
+background-position: 0% 0%;
+background-repeat:no-repeat;
+        }
+
+.print_txt {color:#333333;font-size:12px;FONT-FAMILY:  Courier New;FONT-WEIGHT:normal;}
+
+.mail_user_txt_n, .mail_user_txt_n A {color:#2573c3;font-size:12px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:bold;TEXT-DECORATION:none;}
+.mail_txt_n, .mail_txt_n A {color:#2573c3;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;TEXT-DECORATION:none;}
+
+.mail_user_txt_o, .mail_user_txt_o A {color:#6f6f6f;font-size:12px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;TEXT-DECORATION:none;}
+.mail_txt_o, .mail_txt_o A {color:#6f6f6f;font-size:11px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;TEXT-DECORATION:none;}
+
+.mail_user_txt_o A:hover, .mail_txt_o A:hover, .mail_user_txt_n A:hover, .mail_txt_n A:hover {TEXT-DECORATION:underline;}
+
+.mail_dt_txt {color:#b2b2b2;font-size:10px;FONT-FAMILY:  Tahoma;FONT-WEIGHT:normal;TEXT-DECORATION:none;}
+
+.topnews {
+background-image:url("../pict/topnews_bg.gif");
+background-position: 0% 0%;
+background-repeat:repeat-x;
+width:100%;
+        }
+
+
+		
+span.marketimhoru {
+padding: 5px !important;
+text-align: left !important;
+font-size: 12px !important;
+background-color: #EAE4DA !important;
+border: 1px solid #e0e0e0e !important;
+width:100%;
+}
+.marketimhoru a {
+color: #0000cc !important;
+font-weight: normal;
+font-size: 12px !important;
+}
+.marketimhoru .text {
+color: #000000 !important;
+font-size: 12px !important;
+padding: 3px 0 !important;
+line-height: normal !important;
+}
+.marketimhoru .host {
+color: #006600;
+font-weight: normal;
+font-size: 12px !important;
+padding: 3px 0 !important;
+line-height: normal !important;
+}
+.marketimhoru .adv_bl{
+float:left;
+width:150px;
+margin-left:10px;
+}
+		

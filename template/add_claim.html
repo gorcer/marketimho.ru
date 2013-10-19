@@ -1,0 +1,83 @@
+<?
+
+if (($ow=$number->get_OwnerLogin())!='')
+{
+?>
+<div class='error'>
+Номер уже занят за пользователем <a href='user/<?=$ow ?>'><?=$ow ?></a>.
+</div>
+
+
+<?
+return;
+}
+
+if ($curUser==null)
+{
+?>
+<div class='error'>
+Для получения номера вам необходимо пройти авторизацию.
+</div>
+<?
+return;
+}
+
+if (isset($_SESSION['aim_error']['claim']))
+{
+?>
+<div class='error'>
+Ошибка: <?=$_SESSION['aim_error']['claim'] ?>
+</div>
+
+<?
+unset($_SESSION['aim_error']['claim']);
+}
+?>
+<p class='article_head' align='left'>
+Заявка на получение номера
+</p>
+
+<div class='txt'>
+<p align='justify'>
+Для получения номера вам необходимо сделать фотографию, на которой изображены вы рядом с вашим автомобилем.<br/>
+<br/>
+<b>Требования к фотографии:       <br/></b>
+1) Для того, чтобы подтвердить, что этот автомобиль действительно ваш пришлите фото на котором у вашего автомобиля будут открыты все имеющиеся двери.<br/>
+2) На фотографии должен быть отчётливо виден регистрационный номер автомобиля.<br/>
+
+<br/>
+Далее вам необходимо приложить здесь фотографию и отправить нам заявку.<br/>
+Заява будет рассмотрена в течении нескольких дней.<br/>
+</p>
+</div>
+<br/><br/>
+<p align='left'>
+<span class='article_head' style='font-size:12px;'><b><u>Форма отправки заявки</u></b></span>
+
+<table cellpadding=3 cellspacing=5 class='txt' width='80%'>
+<form enctype="multipart/form-data" action="lib/claims/save.php" method='post'>
+<input type='hidden' name='proc' value='add' />
+<input type='hidden' name='numberID' value='<?=$number->get_ID() ?>' />
+ <tr>
+  <td>Пользователь</td><td><a href='user/<?=$curUser->get_Login() ?>'><?=$curUser->get_Login() ?></a></td>
+ </tr>
+ <tr>
+  <td>Номер</td><td><img src='content/numbers/<?=$number->get_FullNumber() ?>/small.gif'/></td>
+ </tr>
+ <tr>
+  <td>
+   Фото:
+  </td>
+  <td class='txt'>
+   <input type='file' name='claim_photo'/>  <br/>
+   <span style='font-size:9px;'>Размер файла не должен превышать 1 мб.</span>
+  </td>
+ </tr>
+ <tr>
+  <td></td>
+  <td style='padding-top:10px;'><input type='submit' value='отправить' /></td>
+ </tr>
+</form>
+</table>
+
+</p>

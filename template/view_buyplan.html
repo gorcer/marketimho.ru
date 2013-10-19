@@ -1,0 +1,227 @@
+<?
+  if (!$curUser) {
+?>
+ <div class='error'>Чтобы посмотреть свою ленту друзей необходимо пройти авторизацию.</div>
+<?
+return;
+}
+
+
+?>
+<?
+
+$shop_name='';
+$shop_id=-1;
+if (isset($curUser->options['inplan_shop']))
+{
+$shop = DbManager::getShopByID($curUser->options['inplan_shop']);
+$shop_name = $shop->name;
+$shop_id=$curUser->options['inplan_shop'];
+}
+
+?>
+
+<script type='text/javascript' src='js/jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="css/jquery.autocomplete.css" />
+<script>
+ var shop_id=<?=$shop_id ?>;
+function RefreshList()
+{
+
+$('#content').html("<center><br/><br/><img src='pict/indicator.gif' /></center>");
+
+
+        $.get(
+        'ctrl_view_planbuy.php',null,
+        function (data)
+                {
+                        $('#content').html(data);
+                }
+        );
+
+}
+
+   function liFormat (row, i, num) {
+
+          var result = "<span><b>"+row[2]+"</b></span>";
+          return result;
+          }
+
+  function AddGood()
+  {
+  if ($('#goods_name').val()=='') {alert('Не вбыран товар');return;}
+  if ($('#goods_cnt').val()=='') {alert('Не указано количество');return;}
+
+             $.post(
+     'ctrl_action.php',
+     {
+      product_name: $('#goods_name').val(),
+      cnt: $('#goods_cnt').val(),
+      act: 'add_product_to_planbuy'
+     }, function (data)
+       {
+            //alert(data);
+      RefreshList();
+       }
+       );
+  }
+
+  function selectGood(li)
+    {
+     $('#goods_name').focus();
+
+    }
+
+ function selectShop(li)
+    {
+    shop_id=li.extra[0];
+
+   ac_goods.setExtraParams({shop_id:shop_id, page:'SelectProduct_byShop'});
+   ac_goods.flushCache();
+
+     $.post(
+     'ctrl_action.php',
+     {
+      shop_id: li.extra[0],
+      act: 'set_planbuy_shop'
+     }, function (data)
+       {
+      RefreshList();
+       }
+       );
+
+    }
+
+ $(document).ready(function(){
+
+  $("#shop_name").autocomplete(
+                                '<?=$cfg->publicUrl ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'400px',
+                                  minChars:3,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+                                  formatItem: liFormat,
+                                  onItemSelect:selectShop,
+                                  extraParams: {page:'SelectShop'}
+
+                                  }
+                                );
+
+
+  $("#goods_name").autocomplete(
+                                '<?=$cfg->publicUrl ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'400px',
+                                  minChars:4,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+                                  onItemSelect:selectGood,
+                                  extraParams: {shop_id:<?=$shop_id ?>,page:'SelectProduct_byShop'}
+
+                                  }
+                                );
+   ac_goods = $("#goods_name")[0].autocompleter;
+
+      RefreshList();
+
+
+     $('#goods_name').keyup (
+        function (event) {
+
+             if (event.keyCode==13)
+              {
+               $('#goods_cnt').focus();
+              }
+
+           });
+
+
+     $('#shop_name').keyup (
+        function (event) {
+
+             if ((event.keyCode==13) && ($('#shop_name').val()==''))
+              {
+                        $.post(
+                       'ctrl_action.php',
+                       {
+                        shop_id: -1,
+                        act: 'set_planbuy_shop'
+                       }, function (data)
+                         {
+                        RefreshList();
+                         }
+                         );
+              }
+
+           });
+
+
+         $('#goods_cnt').keyup (
+        function (event) {
+
+             if (event.keyCode==13)
+              {
+               AddGood();
+              }
+
+           });
+
+
+
+        });
+
+
+
+
+</script>
+<table width='98%'>
+<tr>
+<td>
+<h1>
+Ваш план покупок
+</h1>
+</td>
+</tr>
+</table>
+
+
+
+
+<table class='planbuy_bg' width='466' height='50' border=0 cellpadding=0 cellspacing=0 style='padding-top:5px;'>
+<tr>
+<td class='txt' style='padding-left:10px;' width='142' valign='top'>
+<b>Товар</b>      <br/>
+<input type='text' name='' value='' style='width:95%' id='goods_name'/>
+</td>
+<td width='30' class='txt' valign='top'>
+<b>Кол-во</b>      <br/>
+<input type='text' name='' value='' style='width:95%' id='goods_cnt'/>
+</td>
+<td valign='bottom' style='padding-bottom:10px;' align='right'>
+<a href='javascript:AddGood();'><img src='pict/plus.gif'/></a>
+</td>
+<td class='txt' style='padding-left:25px;' valign='top'>
+<b style='color:#fff'>Магазин:</b>      <br/>
+<input type='text' name='' value='<?=$shop_name ?>'  style='width:95%' id='shop_name'/>
+</td>
+</tr>
+</table>
+
+<br/>
+
+<div id='content'>
+</div>
+
+<br/>
+
+<div class='hint'>
+Этот инструмент поможет вам сформировать список покупок, которые нужно совершить в ближайшее время.<br/>
+Выберите магазин, в котором собираетесь сделать покупки и добавьте требуемое количество товара.
+</div>

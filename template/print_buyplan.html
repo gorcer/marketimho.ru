@@ -1,0 +1,199 @@
+<?
+header('Content-type: text/html; charset=windows-1251');
+session_start();
+include_once("config/common.php");
+require_once ('lib/DBManager.inc');
+
+?>
+
+<link href="<?=$cfg->css_file ?>" rel="stylesheet" type="text/css" />
+
+<?
+
+if (!isset($_REQUEST['user_id'])) return;
+$user_id=intval($_REQUEST['user_id']);
+
+if (isset($_REQUEST['data']))
+{
+$_REQUEST['data'] = str_replace('\"','',$_REQUEST['data']);
+$data = json_decode($_REQUEST['data']);
+}
+else
+$data=false;
+
+//if (!$data) return;
+
+DbManager::Connect();
+$User = DbManager::getUserByID($user_id);
+if (!$User) return;
+
+ $Products = DbManager::getUserPlan_Products($User, $data);
+
+ if (sizeof($Products)==0)
+ {
+         ?>
+         <div class='txt'>
+         <center>
+         Список пуст.
+         </center>
+         </div>
+         <?
+         return;
+ }
+
+$shop_id=-1;
+if (isset($User->options['inplan_shop']))
+{
+$shop_id=$User->options['inplan_shop'];
+$Shop = DbManager::getShopByID($shop_id);
+
+$shop_city='';
+if ($Shop->city_name!='')
+$shop_city='г.'.$Shop->city_name;
+
+
+$street='';
+if ($Shop->StreetName!='')
+$street='ул.'.$Shop->StreetName;
+
+$house_n='';
+if ($Shop->house_n!='')
+$house_n=', д.'.$Shop->house_n;
+
+
+
+}
+
+
+
+
+?>
+<div style='width:550px' class='print_txt'>
+<center  style='font-size:26px;font-family:Tahoma;'>MARKETIMHO.RU</center>
+<br/>
+<center>
+<?=$Shop->name ?><br/>
+<?=$shop_city.', '.$street ?><?=$house_n ?>
+</center>
+<br/>
+<!--<input type='hidden' name='act' value='del_buyplan_det'/> -->
+<table cellpadding=0 cellspacing=3 border=0 width='100%' class='print_txt'>
+<tr>
+<th></th><th></th>
+ <th align='center' width='110px'><u>цена<br/>(руб.)</u></th>
+ <th align='center' width='60px'><u>кол-во</u></th>
+ <th align='center' width='110px'><u>итого<br/>(руб.)</u></th>
+</tr>
+
+<?
+$i=0;
+$sum=0;
+$sum_min=0;
+$sum_max=0;
+$total=0;
+foreach ($Products as $item)
+{
+ $total_min=0;
+ $total_max=0;
+ $total='n/a';
+
+
+$prodname_line=$item->name;
+
+
+if ($shop_id!=-1)
+{
+
+$sum+=round($item->price*$item->cnt,2);
+$i++;
+if ($item->price=='') $item->price='n/a'
+
+?>
+<tr>
+ <td width='35px' height='25px' align='center' valign='center'><?=$i ?></td>
+ <td style='border-bottom:1px solid #999999;'><?=$prodname_line ?></td>
+ <td class='inprice_price'  style='border-bottom:1px solid #999999;' align='center' ><?=$item->price ?></td>
+ <td class='inprice_price'  style='border-bottom:1px solid #999999;' align='center' ><?=$item->cnt ?></td>
+ <td class='inprice_price'  style='border-bottom:1px solid #999999;' align='center' ><?=round($item->price*$item->cnt,2) ?></td>
+</tr>
+<?
+}
+else
+{
+$total_min=round($item->min_price*$item->cnt,2);
+$total_max=round($item->max_price*$item->cnt,2);
+
+$sum_min+=$total_min;
+$sum_max+=$total_max;
+$i++;
+
+if ($item->min_price=='')
+$price='n/a';
+else
+{
+
+if ($item->min_price!=$item->max_price)
+{
+$price=($item->min_price.' - '.$item->max_price);
+$total=($total_min.' - '.$total_max);
+}
+else
+{
+$price=($item->min_price);
+$total=($total_min);
+}
+
+
+}
+
+
+?>
+<tr>
+ <td style='border-bottom:1px solid #999999;' width='35px' height='25px' align='center' valign='center'><?=$i ?></td>
+ <td style='border-bottom:1px solid #999999;'><?=$prodname_line ?></td>
+ <td class='inprice_price'  style='border-bottom:1px solid #999999;' align='center' ><?=$price ?></td>
+ <td class='inprice_price'  style='border-bottom:1px solid #999999;' align='center' ><?=$item->cnt ?></td>
+ <td class='inprice_price'  style='border-bottom:1px solid #999999;' align='center' ><?=$total ?></td>
+</tr>
+<?
+}
+}
+
+?>
+<tr>
+ <td></td>
+ <td></td>
+ <td></td>
+ <td></td>
+ <?
+
+  $total = ($shop_id!=-1)?$sum:($sum_min==$sum_max?$sum_min:($sum_min.' - '.$sum_max));
+
+ ?>
+
+ <td align='center' style='border-top:1px solid #e5e5e5;'><?=$total; ?></td>
+</tr>
+</table>
+</div>
+<br/>
+<div class='print_txt' style='font-size:12px;width:600px;'>
+<center>
+<div style='width:70%'>
+<?
+if ($shop_id==-1)
+{
+?>
+В этом списке указа максимальная и минимальная цена на выбранный список товаров.
+<?
+}
+else
+{
+        ?>
+
+        <?
+}
+?>
+</div>
+</center>
+</div>
+

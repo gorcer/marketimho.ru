@@ -1,0 +1,42 @@
+<div style='width:100%;float:top;overflow:hidden;'>
+
+<?
+
+ $shlink='';
+ if (isset($_REQUEST['shop_id']))
+ {
+  $shlink='shop/'.intval($_REQUEST['shop_id']).'/';
+ }
+
+?>
+
+<div class='prod_butt'>
+<a href='<?=$shlink ?>product/<?=$id ?>'>Пункты продаж</u></a>
+</div>
+<?
+ if (isset($_REQUEST['shop_id']))
+{
+?>
+<div class='prod_butt'>
+<a href='<?=$shlink ?>product/<?=$id ?>/chart/3'>Динамика цен</a>
+</div>
+<?
+}
+?>
+<div class='prod_butt'>
+<a href='<?=$shlink ?>product/<?=$id ?>/comment'>Отзывы</a>
+</div>
+
+<?
+
+ if (UserManager::getCurUserOption('chk_ProductEdit')!='')
+ {
+   ?>
+   <div class='prod_butt'>
+   <a href='<?=$shlink ?>product/<?=$id ?>/edit'>Карточка товара</a>
+   </div>
+   <?
+ }
+
+?>
+</div>

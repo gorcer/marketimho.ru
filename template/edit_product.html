@@ -1,0 +1,157 @@
+<?
+ if (!isset($_REQUEST['product_id'])) return;
+$id=intval($_REQUEST['product_id']);
+
+        $Product = DbManager::getProductByID($id);
+
+        $Product->name = trim($Product->name);
+        $Product->name=html_entity_decode($Product->name, ENT_QUOTES);
+         $Product->name=str_replace("'",'"', $Product->name);
+?>
+
+<script type='text/javascript' src='js/jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="css/jquery.autocomplete.css" />
+<script type="text/javascript" src="js/effects.core.js"></script>
+<script type="text/javascript" src="js/tag.js"></script>
+<script>
+
+var oldid = <?=$id ?>;
+var oldname = '<?=$Product->name ?>';
+
+   $(document).ready(function(){
+
+       $("#newprod").autocomplete(
+                                '<?=$cfg->publicUrl ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'400px',
+                                  minChars:3,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+
+                                  extraParams: {page:'SelectProduct'}
+
+                                  }
+                                );
+
+
+$('#catname').tagSuggest({
+    url: '<?=$cfg->publicUrl ?>get_tags.php',
+    separator : ', '
+});
+   });
+
+
+   function UpdateProduct()
+   {
+     $.post(
+     'ctrl_action.php',
+        {
+         act:'UpdateProduct',
+         id:<?=$id ?>,
+         name:$("#newprod").val(),
+         catname:$("#catname").val()
+        },
+        function (data)
+                  {
+
+                    if (data=='false')
+                    {          $('#submit_container').html("<input type='button' value='сохранить' onClick='SaveKart()'/>");
+                            return;
+                            }
+
+                    var arr = data.split('###');
+                    if (oldid!=arr[0])
+                        {
+                                document.location.href='product/'+arr[0]+'/edit';
+                        }
+                        else
+                        {
+                          $("#OldPrName").html(arr[1]);
+                        }
+
+                       $('#submit_container').html("<input type='button' value='сохранить' onClick='SaveKart()'/>");
+                  }
+     );
+   }
+
+
+   function SaveKart()
+   {
+
+   $('#submit_container').html("<img src='pict/indicator.gif' />");
+
+   if (oldname==$("#newprod").val())
+   UpdateProduct();
+   else
+      $.get(
+      'ctrl_action.php',
+      {
+              act:'isProductExist',
+              name:$("#newprod").val()
+      },
+      function (data) {
+
+           if (data=='false') {
+                      $('#submit_container').html("<input type='button' value='сохранить' onClick='SaveKart()'/>");
+                   return;
+                   }
+
+           if (data=='no')
+                          {
+                          UpdateProduct();
+                          }
+           else if (data=='yes')
+                          {
+                                  if (confirm('Товар с таким наименованием уже существует в базе. Объединить?'))
+                                  UpdateProduct();
+                          }
+
+
+           }
+    );
+   }
+
+</script>
+
+
+<div class='prodinf_head' id='OldPrName'><?=ucfirst($Product->name) ?></div>
+<br/>
+<?
+ include ('template/nav_product.html');
+?>
+<br/>
+<div class='prodinf_capt' style='float:top;'>Карточка товара</div>
+
+<table cellpadding=3 cellspacing=5 border=0 class='txt' width='80%'>
+ <tr>
+  <td width='90px'>Код:</td><td><?=$id ?></td>
+ </tr>
+ <tr>
+  <td>Название:</td>
+   <td>
+    <input type='text' id='newprod' value='<?=ucfirst($Product->name) ?>' style='width:100%'/>
+   </td>
+   <td>
+
+   </td>
+ </tr>
+
+ <tr>
+  <td>Тэги:</td>
+   <td>
+    <input type='text' id='catname' value='<?=ucfirst($Product->tags) ?>' style='width:100%'/>
+   </td>
+ </tr>
+ <tr>
+  <td></td>
+  <td>
+   <div id='submit_container'>
+      <input type='button' value='сохранить' onClick='SaveKart()'/>
+   </div>
+  </td>
+
+ </tr>
+</table>

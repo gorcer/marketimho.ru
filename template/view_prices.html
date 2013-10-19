@@ -1,0 +1,94 @@
+<?
+
+if (!isset($_REQUEST['id'])) return;
+$id=intval($_REQUEST['id']);
+
+   $ShopInfo = $dbmanager->getShopInfo($id);
+
+$shop_city='';
+if ($ShopInfo->city_name!='')
+$shop_city='г.'.$ShopInfo->city_name;
+
+
+$street='';
+if ($ShopInfo->StreetName!='')
+$street='ул.'.$ShopInfo->StreetName;
+
+$house_n='';
+if ($ShopInfo->house_n!='')
+$house_n=', д.'.$ShopInfo->house_n;
+
+?>
+
+<div class='shop_capt'>
+<?=$ShopInfo->name ?><br/>
+<span class='shop_street'><?=$shop_city.', '.$street ?><?=$house_n ?></span>
+</div>
+<br/>
+<?
+ include ('template/nav_shop.html');
+?>
+<br/>
+<table cellpadding=0 cellspacing=3 border=0 class='inprice_row' width='100%'>
+<tr>
+ <td></td>
+ <td></td>
+ <td class='inprice_dtm'><u>цена (руб.)</u></td>
+ <td align='center' class='inprice_dtm'><u>актуальность</u></td>
+</tr>
+<?
+ $i=0;
+foreach($ShopInfo->items as $item)
+{
+$i++;
+
+   $color='#606060';
+$incprice='';
+
+   if ( (isset($item->PrevPrice)) && ($item->PrevPrice!=$item->price))
+   {
+   $incprice=$item->price-$item->PrevPrice;
+
+   $incprice=round($incprice,2);
+
+   if ($incprice>0)
+   {
+           $incprice='+'.$incprice;
+           $color='#f82f00';
+   }
+   elseif ($incprice<0)
+   {
+           $color='#37597C';
+   }
+
+   if ($incprice==0) $incprice='';
+   else
+   $incprice=' <sup>'.$incprice.'</sup>';
+   }
+
+
+   $comment_img='';
+   if ($item->comment_cnt>0)
+   $comment_img='<a href="shop/'.$ShopInfo->id.'/product/'.$item->ProductID.'/comment"><img src="pict/comment.jpg"/></a>';
+
+
+
+
+
+
+?>
+<tr>
+ <td width='25px' height='25px' style='background:#f5f5f5;' align='center' valign='center'><?=$i ?></td>
+ <td style='border-bottom:1px solid #e5e5e5;'><a href='shop/<?=$id ?>/product/<?=$item->ProductID ?>'><?=$item->PrName ?> <?=$comment_img ?></a></td>
+ <td style='color:<?=$color ?>;border-bottom:1px solid #e5e5e5;'><?=$item->price.$incprice ?></td>
+ <td  align='center' class='inprice_dtm'  style='border-bottom:1px solid #e5e5e5;'><?=$item->dtm ?></td>
+</tr>
+<?
+}
+?>
+
+</table>
+<br/><br/>
+<div class='txt'>
+n/a - этот статус означает что вы не можете увидеть цену на данную строку товара. Цена на товар будет показана только если вы добавите в друзья человека, добавившего этот товар.
+</div>

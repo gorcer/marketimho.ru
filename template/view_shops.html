@@ -1,0 +1,85 @@
+<?
+
+$sort='by_name';
+if (!isset($_REQUEST['by_name']))
+$sort=$_REQUEST['sort'];
+
+$ShopList = DbManager::getShopListByCity($nav_city_id, $sort);
+?>
+
+<h1>
+Каталог пунктов продаж (г. <?=$nav_city->name ?>)
+</h1>
+
+<table cellpadding=5 cellspacing=0 border=0 width='90%' id='cntnt' class='txt'>
+<tr>
+ <th align='left' ><u><a href='shop_list/by_name'  class='inprice_dtm'>Название</a></u></th>
+ <th align='center' width='60px'><u><a href='shop_list/by_lines'  class='inprice_dtm'>строк</a></u></th>
+ <th align='center' width='70px'><u><a href='shop_list/by_rating'  class='inprice_dtm'>рейтинг</a></u></th>
+</tr>
+<?
+foreach($ShopList as $shop)
+{
+$rating=$shop->rating;
+$ratedif=$shop->rating-$shop->old_rating;
+
+if ($rating=='') $rating=0;
+
+$rating=round($rating,2);
+$ratedif = round($ratedif,2);
+
+
+$rating_color=0;
+if ($rating>0) $rating='+'.$rating;
+if ($ratedif>0) $ratedif='+'.$ratedif;
+
+if ($ratedif==0) $ratedif='';
+
+
+    if ($rating>0)
+        {
+        $rating_color = 'color:#7FB517;';
+        }
+        elseif ($rating<0)
+        {
+        $rating_color = 'color:#176DB5;';
+        }
+
+$street='';
+if ($shop->StreetName!='')
+$street=$shop->StreetName;
+
+$house_n='';
+if ($shop->house_n!='')
+$house_n=$shop->house_n;
+
+   $comment_img='';
+   if ($shop->comment_cnt>0)
+   $comment_img='<a href="shop/'.$shop->ShopId.'/comment"><img src="pict/comment.jpg"/></a>';
+
+
+
+?>
+ <tr>
+  <td><a href='shop/<?=$shop->ShopId ?>/pricelist'><b><?=$shop->ShopName ?></b> <?=$comment_img ?></a><br/>
+  <?=$street ?> <?=$house_n ?>
+  </td>
+  <td align='center'>
+   <?=$shop->lines_cnt ?>
+  </td>
+  <td align='center' style='<?=$rating_color ?>'>
+   <nobr><?=$rating ?> <sup><?=$ratedif ?></sup></nobr>
+  </td>
+ </tr>
+<?
+}
+?>
+</table>
+<br/><br/>
+<div class='hint'>
+Внимание: чем выше рейтинг, тем выгодней цены на товары.<br/> Принцип расчёта рейтинга основан на сравнении цен на схожие позиции товаров.
+</div>
+
+<script>
+$("#cntnt tr:nth-child(odd) > td").css("background-color","#fbfbfb");
+</script>

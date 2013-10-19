@@ -1,0 +1,51 @@
+<?
+ $pagename=$nav_city_id.'-'.$pagename;
+
+ if (!is_cached ($pagename, 10))
+ {
+ob_start();
+
+$ProdList = DbManager::getProductCatalog($nav_city_id);
+
+?>
+
+
+<h1>Каталог товаров</h1>
+
+
+<table cellpadding=0 cellspacing=3 border=0 class='inproduct_row' width='100%'>
+<tr>
+ <th></th>
+ <th</th>
+ <th align='center' class='inprice_dtm' width='70px'><u>мин. цена</u></th>
+</tr>
+<?
+$i=0;
+foreach ($ProdList as $item)
+{
+$i++;
+if ($item->price=='') $item->price='n/a'
+?>
+<tr>
+ <td width='25px' height='25px' style='background:#f5f5f5;' align='center' valign='center'><?=$i ?></td>
+ <td style='border-bottom:1px solid #e5e5e5;'><a href='product/<?=$item->id ?>'><?=$item->name ?></a></td>
+ <td class='inprice_price'  style='border-bottom:1px solid #e5e5e5;' align='center' ><?=$item->price ?></td>
+</tr>
+
+<?
+}
+?>
+</table>
+
+<?
+
+$out = ob_get_contents();
+
+ob_end_clean();
+
+ cache_file ($pagename, $out);
+
+}
+
+include ('cache/'.$pagename);
+?>

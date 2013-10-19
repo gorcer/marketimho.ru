@@ -1,0 +1,266 @@
+<?
+include_once("config/common.php");
+include_once("lib/DBManager.inc");
+
+session_start();
+
+
+$dbmanager = DbManager::get_Instance();
+$UserManager = UserManager::get_Instance();
+$MemoryMgr = TMemoryMgr::get_Instance();
+
+$curUser = $UserManager->GetCurrentUser();
+
+
+
+if ((isset($_SESSION['def_city_id'])) && ($_SESSION['def_city_id']!=0))
+$nav_city_id = intval($_SESSION['def_city_id']);
+else
+$nav_city_id = $UserManager->getUserCity();
+
+$nav_city = DbManager::getCityByID($nav_city_id);
+
+
+
+//tmp
+$islogin = false;
+if (($curUser!=null)&&($curUser->id>0)){
+        $islogin = true;
+}
+
+
+
+if (!isset($title))
+$title='Маркетимхо.ру - сохрани свои деньги';
+else
+$title='Маркетимхо.ру - сохрани свои деньги - '.$title;
+?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title><?=$title ?></title>
+<?
+
+include ('template/header.html');
+
+
+
+
+if (!isset($pagename))
+{
+$pagename='template/main_center.html';
+
+}
+
+
+?>
+
+<?php
+
+   //define('LINKFEED_USER', 'cca2adfbd714405f28a8c1dc2d15bcab76dd100e');
+
+   //require_once($_SERVER['DOCUMENT_ROOT'].'/'.LINKFEED_USER.'/linkfeed.php');
+
+   //$linkfeed = new LinkfeedClient();
+
+?>
+
+</head>
+<body>
+
+<table cellpadding=0 cellspacing=0 border=0 width='1024'>
+ <tr>
+  <td width='242px' valign='top'>
+
+   <!-- left side start-->
+        <table cellpadding=0 cellspacing=0 border=0>
+
+         <tr>
+          <td style='padding-left:50px;padding-top:25px;'>
+           <a href='/'><img src='pict/logo.gif' border=0/></a>
+          </td>
+         </tr>
+
+
+         <tr>
+          <td>
+           <?
+           include ('template/main_menu.html');
+           ?>
+          </td>
+         </tr>
+
+ <tr>
+         <td>
+        &nbsp;
+         </td>
+       </tr>
+
+     <tr>
+      <td>
+           <?
+           include ('template/last_new.html');
+           ?>
+      </td>
+     </tr>
+
+<tr>
+ <td class='txt'>
+   <?
+           include ('template/partners_box.html');
+           ?>
+                <br/><br/>
+           <?php
+
+   //global $linkfeed;
+
+   //echo $->return_links(2);
+
+?>
+
+ </td>
+</tr>
+<tr>
+ <td style='padding-left:50px;'>
+ <noindex>
+  <a href="http://projowner.ru/project/1" target='_blank'><img src="http://projowner.ru/pict/banners/ownproj_blue.jpg" border=0 /></a>
+ </noindex>
+ </td>
+</tr>
+        </table>
+   <!-- left side end-->
+  </td>
+
+
+  <td style='padding-top:80px;padding-left:25px;padding-right:25px;' valign='top' align='center'>
+  <!-- center start -->
+    <table cellpadding=0 cellspacing=0 border=0 width='100%'>
+     <tr>
+      <td valign='top'>
+          <?
+
+          if (isset($_SESSION['mem_cntnt']))
+          {
+                  echo '<span class="txt">'.$_SESSION['mem_cntnt'].'</span>';
+                  unset($_SESSION['mem_cntnt']);
+          }
+          else
+          {
+
+
+                 $MemoryVars=array();
+                 if ($MemoryMgr->haveErrors())
+                 {
+                 ?>
+                 <div class='error'>
+                 Ошибка: <br/>
+                 <?
+
+                         foreach($MemoryMgr->Errors as $err)
+                         {
+                          echo $err.'<br/>';
+                         }
+
+                         $MemoryVars = $MemoryMgr->getVars();
+                         $MemoryMgr->flush();
+                         $MemoryMgr->Save();
+
+
+
+                 ?>
+                  </div>
+                 <?
+                 }
+
+
+
+
+          include ($pagename);
+          }
+
+           ?>
+      </td>
+     </tr>
+    </table>
+  <!-- center end -->
+  </td>
+
+  <td width='253px' style='padding-top:15px;' valign='top'>
+  <!-- right side start -->
+     <table cellpadding=0 cellspacing=0 border=0>
+          <tr>
+          <td>
+           <?
+
+if ($pagename!='regpage.html')
+           include ('template/city_select.html');
+
+           ?>
+          </td>
+         </tr>
+
+       <tr>
+         <td>
+        &nbsp;
+         </td>
+       </tr>
+       <tr>
+          <td>
+           <?
+
+           $border_align = 'left';
+           include ('template/user_box.html');
+
+           ?>
+		   
+		    <?php
+   //global $linkfeed;
+
+   //echo $linkfeed->return_links(2);
+   
+ $timeout = ini_get('default_socket_timeout');
+ ini_set('default_socket_timeout', 3);
+ echo     @file_get_contents("http://stlinks.su/get_links.php?url=".urlencode($_SERVER['REQUEST_URI'])."&host=marketimho.ru&charset=windows-1251");
+ ini_set('default_socket_timeout', $timeout);
+
+
+?>
+          </td>
+         </tr>
+     <tr>
+      <td >
+        &nbsp;
+      </td>
+     </tr>
+
+       <tr>
+          <td>
+           <?
+
+           $border_align = 'left';
+           include ('template/view_usertop.html');
+
+           ?>
+          </td>
+         </tr>
+     <tr>
+      <td class='txt'>
+        &nbsp;
+<br/>
+                  
+
+      </td>
+     </tr>
+
+    </table>
+  <!-- right side end -->
+  </td>
+
+ </tr>
+  <?
+           include ('template/copyright.html');
+
+           ?>
+</table>
+
+</body>
+</html>

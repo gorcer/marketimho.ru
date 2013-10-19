@@ -1,0 +1,69 @@
+<?
+  if (!$curUser) {
+?>
+ <div class='error'>Для доступа к этой странице вам необходимо авторизоваться.</div>
+<?
+return;
+}
+
+
+$uid=intval($_REQUEST['uid']);
+if (!$uid) return;
+
+
+$user = $dbmanager->getUser($uid);
+
+?>
+
+
+<script>
+var template;
+
+function  SendReply()
+{
+        $.post(
+        'ctrl_action.php',
+        {
+          act:'add_message',
+          user_id:<?=$uid ?>,
+          parent_id:0,
+          message:$('#msg_text').val()
+
+
+        },
+        function (data)
+                  {
+                    if (data=='ok')
+                    {
+                        document.location.href='messages';
+
+                    }
+                    else
+                    alert(data);
+                  }
+        );
+}
+
+
+
+</script>
+
+
+<h1>Новое сообщение</h1>
+
+
+<table cellpadding=2 cellspacing=0 border=0>
+
+    <tr>
+     <td width='25px' valign='top' style='padding-top:4px'><img src='pict/mail_in.gif' border=0/></td>
+     <td class='mail_user_txt_n' align='left' valign='top' width='50px'><?=$user->login ?></td>
+     <td class='txt'  width='400px' style='padding-left:10px'><p align='justify'>
+
+ <textarea id='msg_text' style='width:490px;height:150px;padding-top:5px;'></textarea><br/><br/>
+       <input type='button' value='отправить' onClick='SendReply()'/>
+
+
+     </td>
+
+    </tr>
+</table>

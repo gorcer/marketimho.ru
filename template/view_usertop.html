@@ -1,0 +1,62 @@
+<?
+
+
+$UserList = DbManager::getUserTop(5);
+
+$city_id=UserManager::getUserCity();
+$pn = 'utop_'.$city_id.'.html';
+if (!is_cached ($pn, 300))
+{
+ob_start();
+
+?>
+<div style='padding-top:16px;width:180px;'>
+
+<div style='padding-bottom:15px;border-left:1px solid #AAC4D9;'>
+<div style='padding-left:25px;'>
+
+ <span class='UserTopCapt' >Участники</span>
+
+<table cellpadding=3 cellspacing=0 border=0 style='padding-top:10px;'>
+<?
+$i=0;
+foreach($UserList as $user)
+{
+$i++;
+        ?>
+          <tr>
+           <td>
+            <span class='utop_user'><a href='user/<?=$user->login ?>'><?=$user->login ?></a></span><br/>
+            <span class='utop_userDet'>Товаров:<?=$user->det_cnt ?> Друзей: <?=$user->fr_cnt ?></span>
+           </td>
+          </tr>
+        <?
+}
+
+
+if ($i==0)
+{
+?>
+ <tr>
+  <td class='txt'>
+  Рейтинг пуст
+
+  </td>
+ </tr>
+<?
+}
+?>
+
+</table>
+
+</div></div></div>
+
+<?
+$out = ob_get_contents();
+ob_end_clean();
+
+ cache_file ($pn, $out);
+
+}
+include ('cache/'.$pn);
+?>

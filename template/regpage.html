@@ -1,0 +1,257 @@
+<script>
+var domainName = "<?=$cfg->publicUrl ?>";
+</script>
+
+<script type="text/javascript" src="poller/js/ajax.js"></script>
+<script type="text/javascript" src="register/register.js"></script>
+<script type='text/javascript' src='js/jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="css/jquery.autocomplete.css" />
+
+<script>
+        function isValidLogin(login){
+                var result = true;
+                var str = login.toLowerCase();
+                var re = "абвгдеёжзийклмнопрстуфхцчшщьыъэюя";
+                for (i=0;i<login.length;i++){
+                        if (re.indexOf(str[i])>0){
+                                result = false;
+                                break;
+                        }
+                }
+                return result;
+        }
+
+        function isValidDate(dateStr)
+        {
+                var date = null;
+                var dateArr = dateStr.split(".");
+                try {
+                        date = new Date(dateArr[2],dateArr[1]-1,dateArr[0]);
+                        if (date == 'Invalid Date'){
+                                return false;
+                        }
+                        if (date.getDate() != dateArr[0] || date.getMonth()+1 != dateArr[1] || date.getFullYear() != dateArr[2])
+                                return false;
+                } catch (ex) {
+                        return false;
+                }
+                return true;
+        }
+
+    function submitForm(frm)
+        {
+        element('registerNew').submit();
+        return;
+                            var validate = false;
+                var name = element('userInput').value;
+                var login = element('loginInput').value;
+                var pwd = element('pwdInput').value;
+                var cpwd = element('confirm_pwd').value;
+                var phone = element('phoneInput').value;
+                var email = element('emailInput').value;
+                var city = element('city').value;
+                var AgreeAgreement = element('AgreeAgreement').checked;
+                var SendNews = element('SendNews').checked;
+                                var birthDate = element('birthDate').value;
+
+                                if ((cpwd!='') && (name!='')&&(login!='')&&(pwd!='')&&(email!=''))
+                {
+                                        validate = true;
+                }
+
+                if (pwd!=cpwd)
+                {
+                   alert('Подтверждение пароля и пароль не совпадают!');
+                   return;
+                }
+
+                                if (validate && birthDate!=''){
+                                        validate = validate && isValidDate(birthDate);
+                                        if (!validate){
+                                                alert('Не правильно заполнена дата!');
+                                                return;
+                                        }
+                                }
+
+                if (AgreeAgreement!=true)
+                {
+                   alert('Вы должны согласиться с условиями проекта!');
+                   return;
+                }
+
+                if (validate){
+                                        if (isValidLogin(login)){
+                                                element('registerNew').submit();
+                                        } else {
+                                                alert('Логин НЕ должен содержать символов кирилицы!');
+                                        }
+                } else {
+                        alert('Не заполнены обязательные поля!');
+                }
+        }
+
+                  function liFormat (row, i, num) {
+          var result = "<span><b>"+row[0]+"</b> - "+row[2]+"</span>";
+          return result;
+          }
+
+          function selectCity(li) {
+//$('#city_id').val(CityId);
+
+ }
+
+
+          $(document).ready(function(){
+
+               $("#city").autocomplete(
+                                '<?=$cfg->get_publicUrl() ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'400px',
+                                  minChars:2,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+                                  formatItem: liFormat,
+                                  extraParams: {page:'SelectCity'},
+                                  onItemSelect:selectCity
+                                  }
+                                );
+
+
+                                });
+
+</script>
+<div style='padding-top:0px;'>
+<form action='register/add.php' method="post" name="registerNew" id="registerNew">
+<table cellspacing=5 border=0  class='regtxt'>
+<tr>
+ <td colspan='3' align='left' style='padding-bottom:10px;' class='txt'>
+ <h1>Регистрация нового участника</h1>
+ Внимание: у нас сквозная регистрация с проектами <a href='http://auto-imho.ru'>auto-imho.ru</a> и <a href='street-imho.ru'>street-imho.ru</a>, поэтому вы можете использовать аккаунты зарегистрированные в этих проектах.
+ </td>
+</tr>
+  <tr>
+   <td> Ваше имя:   </td>
+   <td align='right'> <input value='<?=$MemoryVars['user_name'] ?>' type='text' name='user_name' class='reg_box_red' id='userInput'/></td>
+   <td class='regtxt_lite'>(от 3 до 32 символов, <u>прим. "Александр"</u>)</td>
+  </tr>
+  <tr>
+   <td>
+   &nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td> Логин:   </td>
+   <td align='right'> <input value='<?=$MemoryVars['login'] ?>' type='text' name='login' id='loginInput' class='reg_box_red'  onblur="javascript:doLoginCheck();"/><div style="display:none;color:red;" id="divMessage"><p id='pMessage' style="color:red;"></p></div></td>
+   <td class='regtxt_lite'>(от 3 до 16 латинских символов,  <u>прим. "alex"</u>)</td>
+  </tr>
+
+  <tr>
+   <td> Пароль:   </td>
+   <td align='right'> <input value='<?=$MemoryVars['pwd'] ?>' type='password' name='pwd' id='pwdInput' class='reg_box_red'/></td>
+   <td rowspan='2' valign='top' class='regtxt_lite'>(постарайтесь использовать <br/> в своём пароле буквы и цифры)</td>
+  </tr>
+  <tr>
+   <td> Подтвердите пароль:   </td>
+   <td align='right'> <input value='<?=$MemoryVars['confirm_pwd'] ?>' type='password' name='confirm_pwd' id='confirm_pwd' class='reg_box_red'/></td>
+  </tr>
+
+  <tr>
+   <td>
+   &nbsp;
+   </td>
+  </tr>
+
+  <tr>
+   <td> Email:   </td>
+   <td align='right'> <input value='<?=$MemoryVars['email'] ?>' type='text' name='email' id='emailInput' class='reg_box_red'/></td>
+   <td class='regtxt_lite'>(<u>прим. "alex@mail.ru"</u>)</td>
+  </tr>
+
+  <tr>
+   <td>
+   &nbsp;
+   </td>
+  </tr>
+
+<?
+if (!isset($MemoryVars['gender']))
+$MemoryVars['gender']='m';
+
+?>
+  <tr>
+   <td>Пол:</td>
+   <td align='right'>
+        <select name='gender' class='useredit_box' style='width:185px;'>
+                <option value='m' selected=<?=($MemoryVars['gender']=='m')?'true':'false'; ?>>мужской</option>
+                <option value='w' selected=<?=($MemoryVars['gender']=='w')?'true':'false'; ?>>женский</option>
+        </select>
+   </td>
+  </tr>
+
+  <tr>
+        <td>Дата рождения:<br/> </td>
+        <td align='right'><input type="text" value='<?=$MemoryVars['birthDate'] ?>' class='reg_box' value="" id="birthDate" name="birthDate"></td>
+        <td class='regtxt_lite'>( В формате ДД.ММ.ГГГГ <u> прим. "10.01.1983"</u>)</td>
+
+  </tr>
+
+  <tr>
+   <td> Телефон:   </td>
+   <td align='right'> <input type='text' value='<?=$MemoryVars['phone'] ?>' name='phone' id='phoneInput' class='reg_box'/></td>
+   <td class='regtxt_lite'>(<u> прим. "+79876543210"</u>)</td>
+  </tr>
+
+    <tr>
+   <td>
+   &nbsp;
+   </td>
+  </tr>
+
+  <tr>
+   <td> Город:   </td>
+   <td align='right'> <input type='text' name='city' id='city' class='reg_box_red' value='<?=$MemoryVars['city'] ?>'/></td>
+  </tr>
+    <tr>
+   <td>
+   &nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td valign="top">Проверочный код: </td>
+   <td class='regtxt_lite' align='center'><img src="gensnum.php" border=0 align='right'/> <input type="text"  class='reg_box_red' id="code" name="code" style='width:100px;'/></td>
+  </tr>
+
+
+  <tr>
+   <td> </td>
+   <td class='regtxt_lite' align='center' style='padding-top:20px;'>
+
+    <div style='width:148px;'>
+    <div style='float:left;'>
+    <input type="checkbox" value=1 name='AgreeAgreement' id='AgreeAgreement' checked />
+    </div>
+    <div style='float:left;'>
+     я ознакомлен и согласен <br/> с <a href='articles/agreement'>правилами проекта</a>
+    </div>
+    </div>
+
+     </td>
+  </tr>
+  <tr>
+   <td> </td>
+   <td class='regtxt_lite' align='center'><input type="checkbox" id="SendNews" name="SendNews" value=1 checked /> подписаться на новости </td>
+  </tr>
+  <tr>
+  <td>
+  </td>
+  <td align='center' style='padding-top:20px;'>
+  <input type='button' value='регистрация' class='reg_butt' onclick="javascript:submitForm(this);"/>
+  </td>
+  </tr>
+</table>
+</form>
+
+</div>

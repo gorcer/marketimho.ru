@@ -1,0 +1,275 @@
+<?
+
+$product_name='';
+$shop_name='';
+$shop_id=-1;
+$product_id=-1;
+if (isset($_REQUEST['shop_id']))
+{
+$shop_id=intval($_REQUEST['shop_id']);
+$Shop = DbManager::getShopByID($shop_id);
+$shop_name = $Shop->name;
+}
+
+if (isset($_REQUEST['product_id']))
+{
+$product_id=intval($_REQUEST['product_id']);
+$Product = DbManager::getProductByID($product_id);
+$product_name = $Product->name;
+}
+
+if ($product_id==-1 && $shop_id==-1) return;
+
+$CommentList = DbManager::getCommentList($shop_id, $product_id, $nav_city_id);
+
+
+$whoask='точки подаж';
+if ($product_id!=-1)
+$whoask='продукта';
+
+$view_all_prodc='';
+if ($product_id!=-1 && $shop_id!=-1)
+{
+$whoask = 'продукта в точке продаж';
+$view_all_prodc='
+<P align="right" class="txt">
+<a href="product/'.$product_id.'/comment">Посмотреть отзывы по всем точкам.</a> >>>
+</P>
+
+';
+}
+?>
+
+<div class='prodinf_head'>Обсуждение <?=$whoask ?></div>
+<br/>
+<?
+ if ($product_id!=-1)
+ {
+ include ('template/nav_product.html');
+ }
+ elseif ($shop_id!=-1)
+ {
+ $id=$shop_id;
+ include ('template/nav_shop.html');
+ }
+?>
+
+<script type='text/javascript' src='js/jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="css/jquery.autocomplete.css" />
+<script>
+
+
+  function AddComment()
+  {
+   $.post(
+   'ctrl_action.php',
+    {
+            act:'AddComment',
+            shop_id:<?=$shop_id ?>,
+            product_id:<?=$product_id ?>,
+            comment:$('#comment').val()
+    },
+    function (data)
+             {
+               document.location.reload();
+             }
+
+   );
+  }
+
+
+  function DelComment(id)
+  {
+  if (confirm('Вы уверены что хотите удалить комментарий?'))
+   $.post(
+   'ctrl_action.php',
+    {
+            act:'DelComment',
+            id:id
+    },
+    function (data)
+             {
+                document.location.reload();
+             }
+
+   );
+  }
+
+            function liFormat (row, i, num) {
+
+          var result = "<span><b>"+row[2]+"</b></span>";
+          return result;
+          }
+
+
+    function selectShop(li)
+    {
+    <?
+
+    if ($product_id==-1)
+    {  ?> var url='shop/'+li.extra[0]+'/comment'; <? }
+    else
+    {  ?> var url='shop/'+li.extra[0]+'/product/<?=$product_id ?>/comment'; <? } ?>
+
+     document.location.href=url;
+
+    }
+
+    function selectProduct(li)
+    {
+    <?
+       if ($shop_id==-1)
+    {  ?> var url='product/'+li.extra[0]+'/comment'; <? }
+    else
+    {  ?> var url='shop/<?=$shop_id ?>/product/'+li.extra[0]+'/comment'; <? } ?>
+
+     document.location.href=url;
+    }
+
+   $(document).ready(function(){
+
+    $("#shop_name").autocomplete(
+                                '<?=$cfg->publicUrl ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'400px',
+                                  minChars:3,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+                                  formatItem: liFormat,
+                                  onItemSelect:selectShop,
+                                  extraParams: {page:'SelectShop'}
+
+                                  }
+                                );
+
+
+ $("#goods_name").autocomplete(
+                                '<?=$cfg->publicUrl ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'400px',
+                                  minChars:4,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+                                  onItemSelect:selectProduct,
+                                  extraParams: {page:'SelectProduct'}
+
+                                  }
+                                );
+
+
+           });
+
+</script>
+<br/>
+<table style='width:100%; border:1px dashed #CAA37D;background:#FCF6F1;' class='txt' border=0 cellpadding=5>
+<tr>
+<td width='60'>Точка:</td>
+<td width='150'><input type='text' id='shop_name' value='<?=$shop_name ?>' class='comment_elem'/></td>
+
+<td rowspan='2' valign='top'>
+ <?
+ $txt='';
+ if ($product_id!=-1)
+ {
+ $txt='Обсуждение продукта "<a href="'.$shlink.'product/'.$id.'"><u>'.$product_name.'</u></a>"';
+
+  if ($shop_id!=-1)
+  $txt.=' в точке продаж "<a href="'.$shlink.'pricelist"><u>'.$shop_name.'</u></a>".';
+  else
+  $txt.=' в городе '.$nav_city->name.'.';
+
+ }elseif ($shop_id!=-1)
+ {
+         $txt='Обсуждение точки продаж "<a href="shop/'.$shop_id.'/pricelist"><u>'.$shop_name.'</u></a>"';
+         $txt.=' в городе '.$nav_city->name.'.';
+
+ }
+  echo $txt;
+
+ ?>
+
+
+
+</td>
+
+</tr>
+<tr>
+<td>Продукт:</td>
+<td><input type='text' id='goods_name' value='<?=$product_name ?>' class='comment_elem'/></td>
+</tr>
+</table>
+
+<?=$view_all_prodc ?>
+
+<br/>
+<div class='prodinf_capt' style='float:top;'>Отзывы</div>
+
+
+<?
+      $i=0;
+foreach($CommentList as $item)
+{          $i++;
+        ?>
+        <div class='txt'>
+        <?
+        if (($shop_id==-1) && ($item->shop_id!=-1))
+        {
+        ?>
+         <img src='pict/house.jpg' align='left'/>
+        <span align='left' class='comment_alt'>
+        <a href='shop/<?=$item->shop_id ?>'><b><?=$item->shop_name ?></b></a>
+        </span><br/>
+        <? }
+        elseif ($product_id==-1 && $item->product_id!=-1)
+        {
+         ?>
+         <img src='pict/box.jpg' align='left'/>
+        <span align='left' class='comment_alt'>
+        <a href='product/<?=$item->product_id ?>'><b><?=$item->product_name ?></b></a>
+        </span><br/>
+        <?
+        }
+        ?>
+        <div style='padding-top:3px;padding-bottom:3px;'>
+        <?=$item->description ?>
+        </div>
+        <span align='left' class='comment_alt'>(<?=$item->create_dtm ?>) <a href='user/<?=$item->login ?>'><b>by <?=$item->login ?></b></a>
+        <?
+          if ($curUser!=null)
+          if ($curUser->id==$item->owner_id)
+          {
+                ?>
+                <a href='javascript:DelComment(<?=$item->id ?>)' style='color:#CD3102; '>[удалить]</a>
+                <?
+          }
+        ?>
+        </span>
+        </div>
+        <br/>
+
+        <?
+}
+
+if ($i==0)
+{
+ ?>
+ <div class='txt'>Отзывы отсутствуют :(</div>
+ <?
+}
+
+if ($curUser!=null)
+{
+?>
+<br/><br/><br/>
+<div class='prodinf_capt' style='float:top;'>Добавить отзыв</div>
+ <textarea id='comment' class='txt' style='width:90%;height:100px;'></textarea><br/>
+ <input type='submit' value='добавить' style='margin-top:10px;' onClick='AddComment()'/>
+<?
+}
+?>

@@ -1,0 +1,596 @@
+<?
+
+if (!$curUser)
+{
+?>
+ <div class='error'>Чтобы добавить чек необходимо авторизоваться на сайте.</div>
+<?
+return;
+}
+
+        $mode='add_check';
+        $shop_name = '';
+        $shop_street = '';
+        $shop_house_n = '';
+        $RealBuy_chk='checked';
+        $create_dtm = date('Y-m-d h:i:s');
+if (isset($_REQUEST['id']))
+{
+        $mode='edit_check';
+        $id=$_REQUEST['id'];
+        $Check=$dbmanager->getCheckInfo($id);
+        $_SESSION['in_memory_products'] = $Check->list;
+
+        $shop_name =  $Check->ShopName;
+        $shop_street = $Check->StreetName;
+        $shop_house_n = $Check->house_n;
+        $create_dtm = $Check->create_dtm;
+
+        if ($Check->RealBuy==1)
+        $RealBuy_chk='checked';
+        else
+        $RealBuy_chk='';
+
+}
+
+
+?>
+
+<script type='text/javascript' src='js/jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="css/jquery.autocomplete.css" />
+
+<script>
+
+var template_row;
+var row_cnt=0;
+var streetId=-1;
+
+
+          function liFormat (row, i, num) {
+
+          var result = "<span><b>"+row[2]+"</b></span>";
+          return result;
+          }
+
+    function LoadChk()
+    {
+      $.get(
+      'memory_mod_checkitm.php',
+     null,
+      function (data) {      $("#chk_print_list").html(data);              }
+    );
+    }
+
+
+    function DelChkItm(n)
+    {
+        $.post(
+      'memory_mod_checkitm.php',
+      {
+        act: 'del',
+        index: n
+      },
+      function (data) {
+
+               $("#chk_print_list").html(data);
+              }
+    );
+    }
+
+    function UnDelChkItm(n)
+    {
+        $.post(
+      'memory_mod_checkitm.php',
+      {
+        act: 'undel',
+        index: n
+      },
+      function (data) {
+
+               $("#chk_print_list").html(data);
+              }
+    );
+    }
+
+    function AddChkRow()
+    {
+     if  ($("#goods_name").css ('text-align')=='center') $('#goods_name').val('');
+     if  ($("#goods_price").css ('text-align')=='center') $('#goods_price').val('');
+     if  ($("#goods_cnt").css ('text-align')=='center') $('#goods_cnt').val('');
+     if  ($("#goods_barcode").css ('text-align')=='center') $('#goods_barcode').val('');
+
+
+       $.post(
+      'memory_mod_checkitm.php',
+      {
+        act: 'add',
+        name: $("#goods_name").val(),
+        price: $("#goods_price").val(),
+        cnt: $("#goods_cnt").val(),
+        barcode: $("#goods_barcode").val()
+      },
+      function (data) {
+
+               $("#chk_print_list").html(data);
+
+
+                      $('#goods_name').val('');
+                      $('#goods_price').val('');
+                      $('#goods_cnt').val('');
+                      $('#goods_priceOne').val('');
+                      $('#goods_barcode').val('');
+
+               $("#goods_name").blur();
+               $("#goods_price").blur();
+               $("#goods_cnt").blur();
+               $("#goods_priceOne").blur();
+               $("#goods_barcode").focus();
+
+              }
+    );
+    }
+
+    function ClearList()
+    {
+
+    if (confirm('Отчистить список?'))
+       $.post(
+      'memory_mod_checkitm.php',
+      {
+        act: 'clear'
+      },
+      function (data) {
+               $("#chk_print_list").html(data);
+              }
+    );
+    }
+
+    function SaveChk()
+    {
+
+
+
+     if ($('#shop_name').val()=='') {alert('Выберите магазин');$('#shop_name').focus();return;}
+
+
+
+     if (false)
+     {
+       document.location.href="lib/check/save.php?debug=1<? if ($mode=='edit_check') echo ('&id='.$id); ?>&shop_name="+$("#shop_name").val()+'&act=<?=$mode ?>&city_id='+<?=$nav_city_id ?>+'&street='+ $("#shop_street").val()+'&house_n='+ $("#shop_house").val();
+     }
+     else
+     $.post(
+     'lib/check/save.php',
+     {
+      shop_name: $("#shop_name").val(),
+      act: '<?=$mode ?>',
+      city_id:<?=$nav_city_id ?>,
+      street: $("#shop_street").val(),
+      house_n: $("#shop_house").val(),
+      create_dtm: $("#create_dtm").val(),
+      itmybuy: $("#itmybuy").attr('checked')
+            <?
+            if ($mode=='edit_check')
+            echo ',id:'.$id;
+            ?>
+     }, function (data)
+       {
+
+         if (isNaN(parseInt(data)))
+        alert(data);
+        else
+             document.location.href="view_check/"+data;
+
+       }
+     );
+
+    }
+    function CheckOk()
+    {
+            if ( ($("#shop_name").val()!='') && ($("#shop_street").val()!=''))
+             $("#ok_ind").attr('src','pict/ok_active.gif');
+            else
+             $("#ok_ind").attr('src','pict/ok_inactive.gif');
+
+    }
+
+
+
+    function selectBar(li)
+    {
+    $('#goods_name').val(li.extra[0]);
+     $('#goods_name').css ( { color: '#000', 'font-size': '12px', 'text-align': 'left' });
+   $('#goods_name').focus();
+    }
+
+        function liFormatBar (row, i, num) {
+
+          var result = "<div style='width:100px;float:left;padding-right:5px'>"+row[0]+" </div><div style='float:left;'> "+row[1]+"</div>";
+          return result;
+          }
+
+    function selectGoods(li)
+    {
+    $('#goods_name').focus();
+    }
+
+    function selectShop(li)
+    {
+
+     $.post(
+     'get_street.php',
+     {
+      shop_id: li.extra[0]
+     }, function (data)
+       {
+       var arr = data.split('###');
+
+              $("#shop_street").val(arr[0]);
+              $("#shop_house").val(arr[1]);
+              CheckOk();
+       }
+       );
+    }
+
+    function selectStreet(li)
+    {
+    StreetId=li.extra[0];
+    CheckOk();
+
+    }
+
+    function RecalcOnePrice()
+    {
+              var price = parseFloat($('#goods_price').val().replace(',','.'));
+              var cnt =  parseFloat($('#goods_cnt').val().replace(',','.'));
+
+              var val=(price/cnt);
+
+              if (!isNaN(val))
+              {
+
+
+               $('#goods_priceOne').val( val )
+                .css ( { color: '#000', 'font-size': '12px', 'text-align': 'left' });
+               }
+
+
+
+    }
+
+
+    function InputHelperIn ( obj, text )
+        {
+
+            //если при фокусе значение поля равно значению подсказки, то чистим его и вешаем стили
+                if ( obj.value == text )
+                {
+                     $( obj ).val ( '' );
+                }
+                     $( obj )
+                        .css ( { color: '#000', 'font-size': '12px', 'text-align': 'left' } );
+
+        }
+
+        function InputHelperOut ( obj, text )
+        {
+
+            //если при потере фокуса значение поля равно пустоте или значению по умолчанию,
+            //то пихаем в него текст подсказки и вешаем стили подсказки
+
+                if ( obj.value == '' || obj.value == text )
+                {
+                    $( obj )
+                        .css ( { color: '#999999', 'font-size': '10px', 'text-align': 'center'} )
+                        .val ( text );
+                }
+        }
+
+        function InputHelperCreate ( obj, text )
+        {
+            //вешаем на поле эвенты. На фокус и потерю фокуса.
+                $( obj )
+                        .bind ( 'focus', function () {
+                                InputHelperIn ( this, text );
+                        } )
+                        .bind ( 'blur', function () {
+                                InputHelperOut ( this, text );
+                        } );
+
+                //первоначальный инит
+                InputHelperOut ( obj, text );
+        }
+
+
+
+
+
+
+   $(document).ready(function(){
+
+            InputHelperCreate ( $('#goods_barcode').get( 0 ), 'штрих код' );
+            InputHelperCreate ( $( '#goods_cnt' ).get( 0 ), 'количество' );
+            InputHelperCreate ( $( '#goods_priceOne' ).get( 0 ), 'цена за ед.' );
+            InputHelperCreate ( $( '#goods_name' ).get( 0 ), 'название товара' );
+            InputHelperCreate ( $( '#goods_price' ).get( 0 ), 'цена по чеку' );
+
+   $('#goods_barcode').keyup (
+    function (event) {
+       if (event.keyCode==13)
+              {
+              $('#goods_name').focus();
+              }
+              }
+   );
+
+     $('#goods_name').keyup (
+    function (event) {
+       if (event.keyCode==13)
+              {
+              $('#goods_cnt').focus();
+              }
+              }
+   );
+
+    $('#goods_cnt').keyup (
+        function (event) {
+              RecalcOnePrice();
+             if (event.keyCode==13)
+              {
+              $('#goods_price').focus();
+              }
+
+           });
+
+    $('#goods_price').keyup (
+       function (event) {
+       if (event.keyCode==13)
+              {
+                      $('#goods_barcode').focus();
+                      AddChkRow();
+
+              }
+              }
+    );
+
+
+    $('#goods_priceOne').keyup (
+        function (event) {
+
+              var price = parseFloat($('#goods_priceOne').val().replace(',','.'));
+              var cnt =  parseFloat($('#goods_cnt').val().replace(',','.'));
+
+              var val=(price*cnt);
+
+              if (!isNaN(val))
+              {
+              val = Math.round(val*100)/100;
+               $('#goods_price').val( val );
+               }
+
+                 if (event.keyCode==13)
+              {
+                      $('#goods_name').focus();
+                      AddChkRow();
+
+              }
+            });
+
+  $('#goods_price').keyup(
+      function(event){
+
+               RecalcOnePrice();
+
+
+      }
+  );
+
+  template_row=$('#first_chk_row').html();
+
+
+
+    $("#shop_street").autocomplete(
+                                '<?=$cfg->publicUrl ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'200px',
+                                  minChars:2,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+
+                                  onItemSelect:selectStreet,
+                                  extraParams: {page:'SelectStreet', city_id: <?=$nav_city_id ?>}
+
+                                  }
+                                );
+
+  $("#shop_name").autocomplete(
+                                '<?=$cfg->publicUrl ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'400px',
+                                  minChars:3,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+                                  formatItem: liFormat,
+                                  onItemSelect:selectShop,
+                                  extraParams: {page:'SelectShop'}
+
+                                  }
+                                );
+
+
+ $("#goods_name").autocomplete(
+                                '<?=$cfg->publicUrl ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'400px',
+                                  minChars:4,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+                                  onItemSelect:selectGoods,
+                                  extraParams: {page:'SelectProduct'}
+
+                                  }
+                                );
+
+ $("#goods_barcode").autocomplete(
+                                '<?=$cfg->publicUrl ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'400px',
+                                  minChars:6,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+                                 formatItem: liFormatBar,
+                                  onItemSelect:selectBar,
+                                  extraParams: {page:'SelectProductByCode'}
+
+                                  }
+                                );
+
+
+
+  CheckOk();
+  LoadChk();
+
+                                });
+
+</script>
+<h1>Добавление нового чека</h1>
+
+
+<div style='width:100%;float:top;overflow:hidden;'>
+
+<div class='prod_butt'>
+<a href='service/add_check'>Упрощённая система</u></a>
+</div>
+
+<div class='prod_butt'>
+<a href='service/add_check/ext'>Расширенная система</u></a>
+</div>
+
+</div>
+<br/>
+<table cellpadding=5 cellspacing=0 border=0 class='txt' width='100%'>
+ <tr>
+  <td class='capt2'>
+   Информация о покупке
+  </td>
+  </tr>
+  <tr>
+  <td>
+   <table cellpadding=0 cellspacing=0 border=0  width='100%' class='addcheck_txt'>
+    <tr >
+    <td width='60%' style='padding:5px;' colspan='2'>
+     <input type='text' name='shop_name' id='shop_name' value='<?=$shop_name ?>' class='shop_capt_ext'/>
+    </td>
+     <td width='40%' align='left' style='padding:5px;'>
+      <input type='text' name='create_dtm' id='create_dtm' value='<?=$create_dtm ?>' class='shop_capt_ext'/>
+     </td>
+    </tr>
+    <tr>
+     <td align='center' colspan='2'>(название магазина)</td><td align='center'>(дата покупки)</td>
+    </tr>
+    <tr>
+      <td>
+       <div style='float:left; width:100%;padding:5px;text-align:center;'>
+       <input type='text' name='shop_street' id='shop_street' value='<?=$shop_street ?>' class='shop_capt_ext' style='width:100%'/>
+       <br/>
+       (улица)
+       </div>
+</td><td width='60px' align='center'>
+       <div style='float:right;padding:5px;text-align:center;'>
+       <input type='text' name='shop_house' id='shop_house' value='<?=$shop_house_n ?>' class='shop_capt_ext' style='width:50px'/><br/>
+       (дом)
+       </div>
+
+     </td>
+     <td valign='center' align='center' style='font-size:14px;padding:5px;'>
+       <input id='itmybuy' name='itmybuy' type='checkbox' value='' <?=$RealBuy_chk ?> align='left'/> Реальная покупка.
+     </td>
+    </tr>
+   </table>
+
+  </td>
+ </tr>
+
+ <tr>
+  <td class='capt2' style='padding-top:20px;'>
+   Заполните чек:
+  <table cellpadding=8 cellspacing=0 border=0 class='txt' width='100%' style='padding-top:10px;padding-bottom:10px;'>
+   <tr style='background-color:#fafafa;'>
+       <td width='40%'>
+         <input type='text' name='goods_barcode[]' id='goods_barcode' class='goods_capt' style='width:100%'/>
+       </td>
+
+       <td width='20%'>
+        <input type='text' name='goods_cnts[]' id='goods_cnt' class='goods_cnt' maxlength='9'  style='width:100%'/>
+       </td>
+       <td width='20%'>
+        <input type='text' name='goods_price[]' id='goods_price' class='goods_price' maxlength='9'  style='width:100%'/>
+       </td>
+       <td width='20%'>
+        <input type='text' name='goods_priceOne[]' id='goods_priceOne' class='goods_price' maxlength='9'  style='width:100%'/>
+       </td>
+
+       <td rowspan='2'>
+        <a href='javascript:AddChkRow()'><img src='pict/plus.gif'/></a>
+       </td>
+
+
+   </tr>
+   <tr style='background-color:#fafafa;'>
+       <td colspan='4'>
+       <input type='text' name='goods_name[]' id='goods_name' value='' class='goods_capt' style='width:100%'/>
+       </td>
+      </tr>
+     </td>
+    </tr>
+   </table>
+
+
+
+
+   <div class='chk_print_list' id='chk_print_list'>
+   Empty
+   </div>
+   </td>
+   </tr>
+
+
+<form action='lib/check/save.php' method='post'>
+<input type='hidden' name='act' value='add_check'/>
+
+
+  <tr>
+  <td align='left'>
+ &nbsp;
+  </td>
+ </tr>
+
+
+ <tr>
+  <td align='center'>
+   <input type='button' onClick='SaveChk()' value='сохранить' />
+  </td>
+ </tr>
+ </form>
+
+  </table>
+   <br/><br/>
+   <div class='hint'>
+  <b>Для того, чтобы исключить дублирование товара под разными наименованиями рекомендуем использовать единный формат заполнения наименования товара:</b><br/>
+<br/>
+Изделие (прим.: гель, пиво, яблоки) + Торговая марка в кавычках (на русском) (прим.: "Тропикана", "Балтика") + Дополнение в скобках (прим.: с витаминами, живое, сушеные, темное) + Объем/Фасовка в скобках(прим.: 0,25 л., 0,5 л., 0,5 кг., 1 кг.)<br/>
+<br/>
+Пример: Гель для душа "Тропикана" (с витаминами, увлажнающий) (0,25 л.)<br/>
+   </div>

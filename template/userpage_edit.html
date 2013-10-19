@@ -1,0 +1,170 @@
+<?
+
+$login = '';
+if (isset($_REQUEST['login'])){
+        $login = htmlspecialchars($_REQUEST['login'],ENT_QUOTES);
+}
+
+$user = $dbmanager->GetUserByLogin($login);
+$isAdmin = false;
+if (($curUser != null)&&(($curUser->isAdmin))){
+        $isAdmin = true;
+}
+if (!(($isAdmin or ($curUser and $curUser->id==$user->id) and !$user->isBlocked and $user->isActive))) return;
+
+
+$userLogin =$user->login;
+$birthDate = "";
+if ($user->birthDate!=""){
+        $birthDate = date("d.m.Y",strtotime($user->birthDate));
+}
+
+?>
+<script type='text/javascript' src='js/jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="css/jquery.autocomplete.css" />
+<script>
+                function isValidDate(dateStr)
+                {
+                        var date = null;
+                        var dateArr = dateStr.split(".");
+                        try {
+                                date = new Date(dateArr[2],dateArr[1]-1,dateArr[0]);
+                                if (date == 'Invalid Date'){
+                                        return false;
+                                }
+                                if (date.getDate() != dateArr[0] || date.getMonth()+1 != dateArr[1] || date.getFullYear() != dateArr[2])
+                                        return false;
+                        } catch (ex) {
+                                return false;
+                        }
+                        return true;
+                }
+
+        function submitForm(frm)
+        {
+                var validate = false;
+                var name = element('name').value;
+                var phone = element('phone').value;
+                var city = element('city').value;
+                                var birthDate = element('birthDate').value;
+
+
+                if ((name!='')&&(city!=''))
+                {
+                        validate = true;
+                }
+
+                                if (validate && birthDate!=''){
+                                        validate = validate && isValidDate(birthDate);
+                                        if (!validate){
+                                                alert('Не правильно заполнена дата!');
+                                                return;
+                                        }
+                                }
+
+                if (validate){
+                        element('editForm').submit();
+                } else {
+                        alert('Не заполнены обязательные поля!');
+                }
+        }
+
+
+                  function liFormat (row, i, num) {
+          var result = "<span><b>"+row[0]+"</b> - "+row[2]+"</span>";
+          return result;
+          }
+
+
+          $(document).ready(function(){
+
+               $("#city").autocomplete(
+                                '<?=$cfg->get_publicUrl() ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'400px',
+                                  minChars:2,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+                                  formatItem: liFormat,
+                                  extraParams: {page:'SelectCity'}
+
+                                  }
+                                );
+
+
+                                });
+
+</script>
+<div class='article_head' style='padding-bottom:10px;'>
+Редактирование страницы пользователя
+</div>
+<form action="users/save.php" method="post" id="editForm" enctype="multipart/form-data">
+<input type="hidden" id="id" name="id" value=<?= $user->id?>>
+<input type="hidden" id="action" name="action" value="edit">
+<input type="hidden" name="MAX_FILE_SIZE" value="2097152">
+
+<table cellpadding=6 cellspacing=0 class='userpage_value'>
+
+
+<tr>
+ <td>
+ Имя:
+ </td>
+ <td>
+  <input type='text' name='user_name' id='name' value='<?= $user->name?>' class='useredit_box'/>
+ </td>
+</tr>
+
+<tr>
+ <td>
+ Пол:
+ </td>
+ <td>
+  <select name='gender' class='useredit_box' style='width:60px;'>
+   <option value='m' <?= ($user->sex=='m') ? "selected":""?>>муж.</option>
+   <option value='w' <?= ($user->sex=='w') ? "selected":""?>>жен.</option>
+  </select>
+ </td>
+</tr>
+
+<tr>
+ <td>
+ Дата рождения:<br/> <font style='font-size:9px;'>(ДД.ММ.ГГГГ)</font>
+ </td>
+ <td>
+  <input type="text" class='useredit_box' value="<?= $birthDate?>" id="birthDate" name="birthDate">
+ </td>
+</tr>
+
+<tr>
+ <td>
+ Город:
+ </td>
+ <td>
+  <input type="text" class='useredit_box' value="<?= $user->city?>" id="city" name="city">
+ </td>
+</tr>
+
+<tr>
+ <td>
+ Телефон:
+ </td>
+ <td>
+  <input type="text" class='useredit_box' value="<?= $user->phone?>" id="phone" name="phone">
+ </td>
+</tr>
+
+<tr>
+<td>
+</td>
+<td style='padding-top:10px;'>
+<input type='button' value='сохранить' class='reg_butt' onclick="javascript:submitForm(this);"/>
+</td>
+</tr>
+
+</table>
+
+</form>

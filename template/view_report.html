@@ -1,0 +1,23 @@
+<?
+
+if (!isset($_REQUEST['typeid'])) return;
+$typeid=intval($_REQUEST['typeid']);
+
+switch ($typeid)
+ {
+ case 1:
+        include('template/report_personal_prodbuy.html');
+        break;
+ case 2:
+        include('template/report_personal_prodlist_buy.html');
+        break;
+ case 3:
+        include('template/report_dinamic_prices.html');
+        break;
+ case 4:
+ 		if (isset($_REQUEST['dtm']))
+ 		include('template/personal_mouth_report_det.html');
+ 		else
+        include('template/personal_mouth_report.html');
+        break;
+  }

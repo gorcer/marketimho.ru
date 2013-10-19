@@ -1,0 +1,79 @@
+<?
+//if (!isset($_SESSION['def_region']))
+//$_SESSION['def_region']=-1;
+
+//$curreg=$_SESSION['def_region'];
+//$region_list = $dbmanager->getSelRegionList();
+
+?>
+
+<script>
+
+
+          function liFormat (row, i, num) {
+          var result = "<span><b>"+row[0]+"</b> - "+row[2]+"</span>";
+          return result;
+          }
+
+
+function selectCity(li) {
+CityId=li.extra[0];
+$('#rfpict').attr('src','pict/indicator.gif');
+
+$.post(
+'ctrl_action.php', { 'act' : 'change_city',
+ 'city_id' : CityId	}
+	,
+	function (data)
+	{
+	window.location.reload(true);	}
+);
+
+//CityName=li.selectValue;
+//alert(CityId);
+
+ }
+
+
+          $(document).ready(function(){
+
+               $("#citysel").autocomplete(
+                                '<?=$cfg->get_publicUrl() ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'400px',
+                                  minChars:2,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+                                  formatItem: liFormat,
+                                  extraParams: {page:'SelectCity'},
+                                  onItemSelect:selectCity
+                                  }
+                                );
+
+
+                                });
+</script>
+
+<div style='padding-top:16px;width:210;'>
+<div style='padding-bottom:15px;border-left:1px solid #9FB8C4;border-bottom:1px solid #9FB8C4;'>
+<div style='padding-left:25px;'>
+
+<table cellpadding=0 cellspacing=0>
+ <tr>
+  <td>
+   <img src='pict/region_bg_rf.gif' id='rfpict'/>
+  </td>
+
+  <input type='hidden' name='from' value='<?=$_SERVER['REQUEST_URI'] ?>'/>
+  <td style='padding-left:10px;color:#41638E;font-family:verdana;font-size:10px;'>
+  Выбор города
+  <input name='citysel' id='citysel' class='regsel' value='<?=$nav_city->name ?>'/>
+   </select>
+   <br/>&nbsp;
+  </td>
+
+ </tr>
+</table>

@@ -1,0 +1,308 @@
+<?
+  if (!$curUser) {
+?>
+ <div class='error'>Вы не можете просматривать эту страницу пока не зашли на сайт.</div>
+<?
+return;
+}
+if (!$curUser) return;
+
+$shemaid=-1;
+if (isset($_REQUEST['shemaid']))
+{
+$shemaid=intval($_REQUEST['shemaid']);
+$_SESSION['memRepProd'][$shemaid] = DbManager::getShemaDetails($shemaid);
+}
+
+
+
+//$BuyList = DbManager::getBuyList_byProdArray($product_id, $curUser->id);
+?>
+
+<script language="javascript" type="text/javascript" src="js/jquery.flot.js"></script>
+<script type='text/javascript' src='js/jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="css/jquery.autocomplete.css" />
+
+<script>
+
+
+ function RefreshChart()
+ {
+    $.get(
+    'ctrl_getRepProducts_chart.php',
+    {
+             shemaid:$('#SchemaName').val()
+    }
+    ,
+    function (data)
+              {
+
+//                alert(data);
+               var d1=eval(data);
+              //var d1 = [[0, 3], [4, 8], [8, 5], [9, 13]];
+
+               $.plot($("#placeholder"),  [
+                  { data: d1,
+                  lines: { show: true },
+                  points: { show: true }
+
+                   }
+                  ],
+                   {
+                  xaxis: {
+                          mode: "time",
+                          timeformat: "%d.%m.%y"
+                          }
+                   }
+                  );
+
+              }
+    );
+ }
+
+ function RefreshAll()
+ {
+   $.get(
+         'ctrl_getRepProducts.php',
+          {
+          act:'refresh',
+          shemaid:$('#SchemaName').val(),
+          typeid:2
+          }
+          ,function (data)
+                      {
+
+                        $("#prod_container").html(data);
+                        RefreshChart();
+                      }
+         );
+ }
+
+ function DelProd(id)
+ {
+     $.post(
+         'ctrl_getRepProducts.php',
+          {
+          id:id,
+          act:'del',
+          prname:$('#goods_name').val(),
+          typeid:2,
+          shemaid:$('#SchemaName').val()
+
+          }
+          ,function (data)
+                      {
+                        $("#prod_container").html(data);
+                        RefreshChart();
+                      }
+         );
+ }
+
+ function AddProd()
+ {
+         $.post(
+         'ctrl_getRepProducts.php',
+          {
+          act:'add',
+          prname:$('#goods_name').val(),
+          typeid:2,
+          shemaid:$('#SchemaName').val()
+          }
+          ,function (data)
+                      {
+                        $("#prod_container").html(data);
+                        RefreshChart();
+                      }
+         );
+ }
+
+ function ShemaDel()
+ {
+  if (!(confirm('Удалить выбранную схему?'))) return;
+   $.post(
+                'ctrl_action.php',
+                 {
+                 act:'DelReport',
+                 typeid:2,
+                 shemaid:$('#SchemaName').val()
+                 }
+                 ,function (data)
+                             {
+                               document.location.href='reports/2';
+                             }
+                );
+
+ }
+
+ function ShemaSave()
+ {
+
+ if (!(confirm('Применить изменения?'))) return;
+
+         if ($('#SchemaName').val()==-1)
+         {
+                 var name = prompt('Введите название схемы');
+                 if (name == '') return;
+
+                 $.post(
+                'ctrl_action.php',
+                 {
+                 act:'SaveReport',
+                 typeid:2,
+                 name:name,
+                 shemaid:$('#SchemaName').val()
+                 }
+                 ,function (data)
+                             {
+                               document.location.href='reports/2/'+data;
+                             }
+                );
+         }
+         else
+         {
+          var schema_id=$('#SchemaName').val();
+
+           $.post(
+                'ctrl_action.php',
+                 {
+                 act:'SaveReport',
+                 typeid:2,
+                 id:schema_id,
+                 shemaid:$('#SchemaName').val()
+                 }
+                 ,function (data)
+                             {
+                               RefreshChart();
+                             }
+                );
+
+         }
+ }
+
+ function ShemaChange()
+ {
+ id=$('#SchemaName').val();
+    if (id!=-1)
+    document.location.href='reports/2/'+id;
+    else
+    document.location.href='reports/2';
+ }
+
+ $(document).ready(function(){
+
+ RefreshAll();
+
+         $("#goods_name").autocomplete(
+                                '<?=$cfg->publicUrl ?>ctrl_dropdown.php',
+                                  {
+                                  delay:200,
+                                  width:'300px',
+                                  minChars:4,
+                                  matchSubset:1,
+                                  autoFill:true,
+                                  selectOnly:true,
+                                  maxItemsToShow:100,
+                                  extraParams: {page:'SelectProduct'}
+
+                                  }
+                                );
+
+                              });
+
+</script>
+
+<h1>Отчёт по персональным расходам</h1>
+
+ <div id="placeholder" style="width:100%;height:300px;"></div>
+
+ <script id="source" language="javascript" type="text/javascript">
+
+$(function () {
+
+
+    var d1 = [];
+
+
+
+    $.plot($("#placeholder"),  [
+    { data: d1,
+    lines: { show: true },
+    points: { show: true }
+
+     }
+    ],
+     {
+    xaxis: {
+            mode: "time",
+            timeformat: "%d.%m.%y"
+            }
+     }
+    );
+});
+</script>
+
+<div class='hint'>
+Благодаря этому отчёту вы можете видеть Ваши суммарные расходы на интересующие Вас товары в течении последних 3х месяцев. Обратите внимание, что в отчёт попадают только чеки у которых проставлена галочка "реальная покупка".
+</div>
+
+ <table cellpadding=5 cellspacing=0 border=0 class='txt' width='100%' style='padding-top:10px;padding-bottom:10px;'>
+  <tr class='add_prod_capt'>
+    <td>
+       <b>Выбор схемы</b>
+    </td>
+   </tr>
+   <tr style='background-color:#FFFBF0;'>
+       <td>
+<?
+
+$ShemaList = DbManager::getShemaList($curUser->id);
+
+?>
+
+       <select style='width:250px;' id='SchemaName' onChange='ShemaChange()'>
+        <option value='-1' <?=($shemaid==-1)?'selected="true"':'';  ?>><Новая></option>
+        <?
+
+
+        foreach($ShemaList as $item)
+        {
+        $sel='';
+        if ($item->id == $shemaid)
+        $sel='selected="true"';
+
+        ?>
+        <option <?=$sel ?> value='<?=$item->id ?>'><?=$item->name ?></option>
+        <?
+        }
+        ?>
+       </select>
+       &nbsp;
+       <input type='button' value='Сохранить' onClick='ShemaSave()'/>
+       &nbsp;
+       <input type='button' value='Удалить' onClick='ShemaDel()'/>
+
+
+       </td>
+
+   </tr>
+
+
+  <tr class='add_prod_capt'>
+    <td>
+    <br/>
+       <b>Наименование товара</b>
+    </td>
+   </tr>
+   <tr style='background-color:#FFFBF0;'>
+       <td>
+       <input type='text' name='goods_name' id='goods_name' value='' class='goods_capt' style='width:100%;'/>
+       </td>
+       <td width='24px;'>
+        <a href='javascript:AddProd()'><img src='pict/plus.gif'/></a>
+       </td>
+      </tr>
+     </td>
+    </tr>
+   </table>
+
+   <div id='prod_container' class='txt'/></div>

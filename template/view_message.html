@@ -1,0 +1,199 @@
+<?
+
+
+  if (!$curUser) {
+?>
+ <div class='error'>Для доступа к этой странице вам необходимо авторизоваться.</div>
+<?
+return;
+}
+
+
+
+$id=intval($_REQUEST['id']);
+if (!$id) return;
+
+$message = DbManager::getMessageByID($id);
+if ( ($message->user_id !=$curUser->id) && ($message->user2_id !=$curUser->id)) return;
+
+$vn='';
+if ($message->user2_id ==$curUser->id)
+$vn='2';
+
+
+DbManager::ApplyViewMessage($id, $vn);
+
+
+$mlist = DbManager::getMessageListByParentID($id);
+
+
+  $utxt='';
+    if ($message->user_name2 == $curUser->login)
+    {
+    $utxt="<a href='user/".$message->user_name."'>".'<span style="color:#C16BC3">Я:</span>'.'</a>';
+    $mes_owner = $message->user_id;
+    $uname=$message->user_name;
+    $isView = $message->isView;
+    }
+    else
+    {
+
+    if ($message->sex2=='m') $g='Он'; else $g='Она';
+
+    $utxt="<a href='user/".$message->user_name2."'>".$g.":</a>";
+    $mes_owner = $message->user2_id;
+    $uname=$message->user_name2;
+    $isView = 1;
+    }
+
+
+     $mico='';
+     if ($isView==1)
+     $mico='_open';
+
+?>
+
+<script>
+var template;
+
+function  SendReply()
+{
+        $.post(
+        'ctrl_action.php',
+        {
+          act:'add_message',
+          user_id:<?=$mes_owner ?>,
+          parent_id:<?=$message->id ?>,
+          message:$('#reply_text').val()
+
+        },
+        function (data)
+                  {
+                    if (data=='ok')
+                    {
+                        location.reload(true);
+
+                    }
+                    else
+                    alert(data);
+                  }
+        );
+}
+
+          $(document).ready(function(){
+
+            $('#dialog').hide();
+            template =$('#dialog').html();
+
+          });
+
+</script>
+<h1>Общение с пользователем <a href='user/<?=$uname ?>'><u style='color:#666666'><?=$uname ?></u></a> (#<?=$message->id ?>)</h1>
+<br/>
+<table cellpadding=2 cellspacing=0 border=0>
+
+<?
+
+
+
+
+?>
+
+    <tr>
+     <td width='25px' valign='top' style='padding-top:4px'><a href='message/<?=$message->id ?>'><img src='pict/mail<?=$mico ?>.gif' border=0/></a></td>
+     <td class='mail_user_txt_n' align='left' valign='top' width='50px'><?=$utxt ?></td>
+     <td class='txt'  width='400px' style='padding-left:10px'><p align='justify'><?=$message->message ?></p>
+
+   <!--   <a href='javascript:Reply()' title='Ответить'><img src='pict/reply.gif' align='right' border=0 alt='Ответить'/></a>-->
+
+     <p align='left' class='mail_dt_txt'>
+     <?=$message->dtm ?>
+     </p>
+
+     </td>
+
+    </tr>
+</table>
+
+<?
+if (sizeof($mlist)>0)
+{
+?>
+  <table cellpadding=2 cellspacing=0 border=0>
+    <?
+    foreach($mlist as $item)
+    {
+
+    $utxt='';
+    if ($item->user_name == $curUser->login)
+    {
+    $utxt='<span style="color:#C16BC3">Я:</span>';
+    $isView = $item->isView;
+    }
+    else
+    {
+
+      if ($item->sex=='m') $g='Он';
+      else $g='Она';
+
+
+    $utxt="<a href='user/".$item->user_name."'>".$g."</a>:";
+    $isView = $item->isView2;
+    }
+     $mico='';
+     if ($isView==1)
+     $mico='_open';
+
+    ?>
+    <tr>
+     <td>
+     &nbsp;
+     </td>
+    </tr>
+    <tr>
+     <td width='25px' valign='top' style='padding-top:4px'><img src='pict/mail<?=$mico ?>.gif' border=0/></td>
+     <td class='mail_user_txt_n' align='left' valign='top' width='50px'><?=$utxt ?></td>
+     <td class='txt'  width='400px' style='padding-left:10px'><p align='justify'><?=$item->message ?></p>
+
+   <!--   <a href='javascript:Reply()' title='Ответить'><img src='pict/reply.gif' align='right' border=0 alt='Ответить'/></a>-->
+
+     <p align='left' class='mail_dt_txt'>
+     <?=$item->dtm ?>
+     </p>
+
+     </td>
+    </tr>
+    <?
+    }
+    ?>
+</table>
+<?
+}
+?>
+
+
+ <div id='dialog'>
+<table cellpadding=2 cellspacing=0 border=0>
+
+    <tr>
+     <td width='25px' valign='top' style='padding-top:4px'><a href='message/%%mid%%'><img src='pict/mail.gif' border=0/></a></td>
+     <td class='mail_user_txt_n' align='left' valign='top'><a href='user/%%user_name%%'>%%user_name%%</a></td>
+     <td class='txt'  width='400px' style='padding-left:10px'><p align='justify'>%%message%%</p>
+
+     <p align='left' class='mail_dt_txt'>
+     %%dtm%%
+     </p>
+
+     </td>
+
+    </tr>
+</table>
+ </div>
+
+     <div  id='reply_form' class='txt' style='padding-top:10px;padding-left:0px;'>
+       <b>Ответ:</b>
+     <br/><br/>
+       <textarea id='reply_text' style='width:490px;height:150px;padding-top:5px;'></textarea><br/><br/>
+       <input type='button' value='отправить' onClick='SendReply()'/>
+       </div>
+

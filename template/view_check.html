@@ -1,0 +1,142 @@
+<?
+  if (!$curUser) {
+?>
+ <div class='error'>Вы не можете просматривать эту страницу пока не зашли на сайт.</div>
+<?
+return;
+}
+
+
+if (!isset($_REQUEST['id'])) return;
+$id=intval($_REQUEST['id']);
+
+$Check=$dbmanager->getCheckInfo($id);
+
+?>
+ <h1>Информация о покупке</h1>
+<table cellpadding=3 cellspacing=3 border=0 class='txt'>
+ <tr>
+  <td>Продавец:</td>
+  <td><a href='shop/<?=$Check->ShopId ?>/pricelist'><b><?=$Check->ShopName ?></b></a></td>
+ </tr>
+
+ <tr>
+  <td>Дата:</td>
+  <td> <?=$Check->create_dtm ?></td>
+ </tr>
+</table>
+
+   <br/>   <br/>
+<span class='blue_txt2'><b>Содержание чека</b></span>  <br/><br/>
+<table cellspacing=0 class='txt' width='100%' border=0 cellpadding=2>
+         <tr  class='chk_head'>
+         <th></th>
+         <th width='10%'>Цена за ед.</th>
+         <th width='10%'>Кол.-во</th>
+         <th width='10%'>Итого (руб.)</th>
+         <th width='8%' class='analiz_h'>мин. цена</th>
+         <th width='8%' class='analiz_h'>макс. цена</th>
+         <th width='16%' class='analiz_h_p' valign='center'><b>Переплата</b> (примерная)</th>
+        </tr>
+<?
+
+$i=0;
+$cnt=0;
+$tprice=0;
+$spereplat=0;
+$MinPriceCP_sum=0;
+foreach ($Check->list as $item)
+{
+$i++;
+$cnt+=$item->cnt;
+$tprice+=$item->price;
+
+$preplata = round(($item->OnePrice-$item->analiz->min_price)*$item->cnt,2);
+if ($preplata==0) $preplata=round(($item->OnePrice-$item->analiz->max_price)*$item->cnt,2);
+
+$spereplat+=$preplata;
+
+
+$min_price=round($item->analiz->min_price*$item->cnt,2);
+$avg_price=round($item->analiz->avg_price*$item->cnt,2);
+$max_price=round($item->analiz->max_price*$item->cnt,2);
+$MinPriceCP='';
+
+
+if ($min_price==$max_price)
+{
+     $min_price='-';
+     $avg_price='-';
+     $max_price='-';
+     $preplata='';
+if ($item->MinPriceCP!=false)
+{
+$mp = round($item->MinPriceCP*$item->price,2);
+$MinPriceCP_sum+=$mp;
+
+if ($mp>0) $mp='+'.$mp;
+
+$MinPriceCP=' ('.$mp.')';
+}
+else
+$preplata='n/a';
+
+
+
+
+
+}
+
+
+
+        ?>
+        <tr>
+         <td colspan='7' class='chk_det'><?=$i ?>. <a href='shop/<?=$Check->ShopId ?>/product/<?=$item->ProductID ?>'><?=$item->name ?></a></td>
+        </tr>
+        <tr>
+         <td></td>
+         <td align='center' class='chk_det'><?=$item->OnePrice ?></td>
+         <td align='center' class='chk_det'><?=$item->cnt ?></td>
+         <td align='center' class='chk_det'><?=$item->price ?></td>
+         <td align='center' class='analiz_d'><?=$min_price ?></td>
+         <td align='center' class='analiz_d'><?=$max_price ?></td>
+         <td align='center' class='analiz_d_p'><?=$preplata ?> <?=$MinPriceCP ?></td>
+
+
+        </tr>
+        <?
+}
+
+
+
+$txt_MinPriceCP_sum='';
+
+
+if ($MinPriceCP_sum!=0)
+{
+if (($MinPriceCP_sum+$spereplat)>0)
+$txt_MinPriceCP_sum ='(+'.($MinPriceCP_sum+$spereplat).' RUB)';
+else
+$txt_MinPriceCP_sum ='('.($MinPriceCP_sum+$spereplat).' RUB)';
+}
+
+
+if ($spereplat>0)
+$spereplat='+'.$spereplat;
+?>
+<tr>
+
+ <td></td>
+ <td></td>
+ <td align='center' style='border-top:1px solid #444444;'><?=$cnt ?></td>
+ <td align='center' style='border-top:1px solid #444444;'><b><?=$tprice ?> RUB</b></td>
+ <td></td>
+
+ <td></td>
+ <td align='center' style='border-top:1px solid #444444;' class='analiz_d_p'><b><?=$spereplat ?> RUB </b><br/> <?=$txt_MinPriceCP_sum ?></td>
+</tr>
+</table>
+<br/>
+<div class='hint' style='width:95%'>
+Переплата считается на основании схожих строк в других точках продаж.<br/> Отрицательная переплата свидетельствует об экономии в покупке. В скобочках указывается примерная переплата расчитанная на основании ценовой политики точки продаж.
+</div>

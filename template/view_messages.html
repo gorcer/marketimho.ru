@@ -1,0 +1,84 @@
+<?
+  if (!$curUser) {
+?>
+ <div class='error'>Для доступа к этой странице вам необходимо авторизоваться.</div>
+<?
+return;
+}
+
+
+
+$MessageList = DbManager::getUserMessages($curUser->id);
+
+
+?>
+
+<h1>Мои сообщения</h1>
+
+ <?
+ $i=0;
+ ?>
+<table width='100%' cellpadding=3 cellspacing=0 border=0>
+   <?
+   foreach($MessageList as $message)
+   {
+    $i++;
+    $utxt='';
+    $isView=1;
+   if ($message->user2_id==$curUser->id)
+   {
+    $utxt="<a href='message/".$message->id."'><span>".$message->user_name."</span></a>";
+    $ico='_out';
+    $isView = $message->isView2;
+    }
+    else
+    {
+
+    $utxt="<a href='message/".$message->id."'>".$message->user_name2."</a>";
+    $ico = '_in';
+    $isView = $message->isView;
+
+    }
+
+
+
+
+   if (($isView == 0) || ($message->parent_view>0))
+   {
+           $class_pf='n';
+   }
+   else
+           $class_pf='o';
+
+
+if (strlen($message->message)>55)
+$mes=$message->message.'...';
+else
+$mes=$message->message;
+
+   ?>
+    <tr>
+     <td width='25px'><a href='message/<?=$message->id ?>'><img src='pict/mail<?=$ico ?>.gif' border=0/></a></td>
+     <td class='mail_user_txt_<?=$class_pf ?>' align='left'><?=$utxt ?></td>
+     <td class='mail_txt_<?=$class_pf ?>'><a href='message/<?=$message->id ?>'><?=$mes ?></a></td>
+     <td class='mail_dt_txt'><?=$message->dtm ?></td>
+    </tr>
+   <?
+   }
+
+   if ($i==0)
+   {
+   ?>
+   <tr>
+    <td class='txt'>
+     У вас нет сообщений.
+    </td>
+   </tr>
+   <?
+   }
+   ?>
+</table>
+
+<div class='hint'>
+На этой странице вы можете переписываться с другими пользователями системы. Для того чтобы написать сообщение пользователю, зайдите на его страницу и нажмите на изображение конверта, рядом с его именем.
+</div>
